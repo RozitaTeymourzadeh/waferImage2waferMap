@@ -3,19 +3,10 @@
  */
 package cs601;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Properties;
 
+import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 /**
  * @author rozitateymourzadeh

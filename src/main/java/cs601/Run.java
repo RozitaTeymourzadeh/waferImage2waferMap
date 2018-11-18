@@ -39,7 +39,19 @@ public class Run {
 				convert(imgs[i]);
 			}
 		}
+		
+		// Delet processed files
+		File[] imgsProcessed  = folder.listFiles();
+		for(int i1 = 0 ; i1 < imgsProcessed.length ; i1++) {
+			if(imgsProcessed[i1].getName().toLowerCase().contains("crop") || imgsProcessed[i1].getName().toLowerCase().contains("patterns")) {
+				imgsProcessed[i1].delete();
+			}
+		}
+		LOG.info("Conversion Process was completed!!");
 	}
+	
+	
+	
 
 	private static void convert(File file) {
 		System.out.println(file.length());

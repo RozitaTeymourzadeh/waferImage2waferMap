@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
@@ -22,17 +23,25 @@ import com.google.gson.JsonParser;
  */
 public class UnitTest {
 
-	private static Properties prop = new Properties();
-	private static String PROJECT_CONFIG_FILE = "src/main/resources/config.json";
+	private static ConfigManager CONFIG = null;
 	
 	@Test
 	public void testConfig() throws IOException {
-		JsonParser parser = new JsonParser();
-		InputStream input  = new FileInputStream(PROJECT_CONFIG_FILE);
-		prop.load(input);
-		Reader reader = new InputStreamReader(input);
-		JsonElement rootElement = parser.parse(reader);
-		Assert.assertNotNull(rootElement);
+		CONFIG = ConfigManager.getConfig();
+		Assert.assertNotNull(CONFIG);
 	}
+	
+	@Test
+	public void testInput() throws IOException {
+		String inputFile = ConfigManager.getConfig().getInput();
+		Assert.assertEquals("waferIMG", inputFile);
+	}
+	
+	@Test
+	public void testOutput() throws IOException {
+		String outputFile = ConfigManager.getConfig().getOutput();
+		Assert.assertEquals("waferTXT", outputFile);
+	}
+	
 	
 }

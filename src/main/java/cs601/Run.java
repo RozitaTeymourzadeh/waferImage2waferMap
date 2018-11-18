@@ -4,6 +4,7 @@
 package cs601;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,9 +22,17 @@ public class Run {
 		LOG.info("Convesion is started ..." + Run.class.getName());
 		ConfigManager.getConfig().getInput();
 		
-		File folder = new File(".\\" + ConfigManager.getConfig().getInput());
+		File folder = new File(ConfigManager.getConfig().getInput());//Read the waferIMG file
 		cacheFolder = new File(folder.getParent(), "cache");
-
+		// create cache file
+		try {
+			cacheFolder.mkdir();
+			LOG.info("Create cache folder:" + cacheFolder.getAbsolutePath());
+		} catch(Exception e) {
+			LOG.error("FATAL: Exception occured while generating cache file in: " + Run.class.getName());
+		}
+		
+		// read file
 		File[] imgs = folder.listFiles();
 		for(int i = 0; i < imgs.length; i++){
 			if(imgs[i].getName().toLowerCase().endsWith(".jpg") || imgs[i].getName().toLowerCase().endsWith(".bmp")|| imgs[i].getName().toLowerCase().endsWith(".png")){
@@ -33,7 +42,7 @@ public class Run {
 	}
 
 	private static void convert(File file) {
-		// TODO Auto-generated method stub
+		System.out.println(file.length());
 		
 	}
 }

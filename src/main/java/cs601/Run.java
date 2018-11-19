@@ -4,7 +4,9 @@
 package cs601;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -439,6 +441,38 @@ public class Run {
 				}
 			}
 		}
+		
+		try {
+			int lineNum = 1;
+			File mapFile = new File(ConfigManager.getConfig().getOutput(), fileName +".txt");
+			BufferedWriter output;
+			output = new BufferedWriter(new FileWriter(mapFile));
+
+			/* Create ASIC header*/
+			output.write("DEVICE PD_Side-nz\r\n");
+			output.write("ROWCNT " + (iEnd-iStart+1)+ "\r\n");
+			output.write("COLCNT " + (jEnd-jStart+1)+ "\r\n");
+			output.write("PASBIN 1\r\n");
+			output.write("SKPBIN .\r\n");
+			output.write("NULBIN _\r\n");
+			output.write("REFBIN R\r\n");
+			output.write("WAFDIA 8\r\n");
+			output.write("XDIES1 0.500000\r\n");
+			output.write("YDIES1 0.500000\r\n");
+
+			for(int i = iStart; i <= iEnd; i++, lineNum++){
+				//output.write("MAP"+String.format("%03d", lineNum) +" ");
+				for(int j = jStart; j <= jEnd; j++){
+					output.write(waferMap[i][j]?'1':'.');
+				}
+				output.write("\r\n") ;	
+			}
+			output.flush();
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Done!");
 
 	}
 	

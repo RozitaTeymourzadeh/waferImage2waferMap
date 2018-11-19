@@ -48,9 +48,21 @@ public class UnitTest {
 	}
 	
 	@Test
-	public void testgrayScale() throws IOException {
+	public void testGrayScale() throws IOException {
 		String grayScale = ConfigManager.getConfig().getGrayScale();
 		Assert.assertEquals(256, Integer.parseInt(grayScale));
+	}
+	
+	@Test
+	public void testRedIndex() throws IOException {
+		String redIndex = ConfigManager.getConfig().getRedIndex();
+		Assert.assertEquals(16, Integer.parseInt(redIndex));
+	}
+	
+	@Test
+	public void testGreenIndex() throws IOException {
+		String greenIndex = ConfigManager.getConfig().getGreenIndex();
+		Assert.assertEquals(8, Integer.parseInt(greenIndex));
 	}
 	
 	@Test

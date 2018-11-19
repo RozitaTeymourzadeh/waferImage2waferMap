@@ -4,7 +4,12 @@
 package cs601;
 
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,6 +38,22 @@ public class UnitTest {
 		String outputFile = ConfigManager.getConfig().getOutput();
 		Assert.assertEquals("waferTXT", outputFile);
 	}
+	
+	@Test
+	public void testgrayScale() throws IOException {
+		String grayScale = ConfigManager.getConfig().getGrayScale();
+		Assert.assertEquals(256, Integer.parseInt(grayScale));
+	}
+	
+	@Test
+	public void testImage() throws IOException {
+		File folder = new File(ConfigManager.getConfig().getInput());
+		File[] imgs = folder.listFiles();
+		File imageFile = imgs[0];
+		BufferedImage image = ImageIO.read(imageFile);
+		Assert.assertNotNull(image);
+	}
+	
 	
 	
 }

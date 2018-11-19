@@ -70,11 +70,10 @@ public class Run {
 		}
 		try {
 			image = ImageIO.read(imageFile);
-			LOG.info("Processing" + imageFile.getAbsolutePath());
+			LOG.info("Processing" + imageName);
 		} catch(IOException e) {
 			LOG.error("Failed in" + imageFile.getAbsolutePath());
 			return;
-
 		}
 
 		int height = image.getHeight();
@@ -96,8 +95,10 @@ public class Run {
 			{
 				rgb = image.getRGB(w, h);
 				//mask rgb and separate the index
-				int red = (rgb >> 16) & 0xFF;
-				int green = (rgb >> 8) & 0xFF;
+				Integer redIndex = Integer.parseInt(ConfigManager.getConfig().getGreenIndex());
+				Integer greenIndex = Integer.parseInt(ConfigManager.getConfig().getGreenIndex());
+				int red = (rgb >> redIndex) & 0xFF;
+				int green = (rgb >> greenIndex) & 0xFF;
 				int blue = (rgb & 0xFF);
 
 				statR[red]++;
@@ -107,7 +108,7 @@ public class Run {
 				stat[makeRGB(rgb)]++;
 			}
 		}
-
+// find maximum index of state
 		int max = 0;
 		int maxLimit = Integer.parseInt(ConfigManager.getConfig().getGrayScale());
 		for(int i = 0; i < maxLimit; i++){
@@ -116,9 +117,9 @@ public class Run {
 		}
 
 		/*  ---------- To Print RGB State ---------- */ 
-		for(int i = 0; i < maxLimit; i++){
-			LOG.info("RGB states are: " + stat[i] + "	" + statR[i] + "	" + statG[i] + " " + statB[i]);
-		}
+//		for(int i = 0; i < maxLimit; i++){
+//			LOG.info("RGB states are: " + stat[i] + " " + statR[i] + " " + statG[i] + " " + statB[i]);
+//		}
 
 		/*  ---------- Normalize RGB to Black and White ---------- */
 		for (int h = 1; h < height; h+=hStep)
@@ -126,9 +127,6 @@ public class Run {
 			for (int w = 1; w<width; w+=wStep)
 			{
 				rgb = image.getRGB(w, h);
-
-				int r = (rgb >> 16) & 0xFF;
-				int g = (rgb >> 8) & 0xFF;
 				int b = (rgb & 0xFF);
 
 				rgb = makeRGB(rgb);
@@ -718,9 +716,12 @@ public class Run {
 	 *@return RGB
 	 */
 	private static int makeRGB(int rgb) {
+		int result = 0;
 		float r = (rgb >> 16) & 0xFF;
 		float g = (rgb >> 8) & 0xFF;
 		float b = (rgb & 0xFF);
-		return (int)(r*0.299 + g*0.587 + b*0.114);
+		//convert the pixel to black and white
+		result = (int)(r*0.299 + g*0.587 + b*0.114);
+		return result;
 	}
 }

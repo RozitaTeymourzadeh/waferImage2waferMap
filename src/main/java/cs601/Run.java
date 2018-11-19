@@ -326,11 +326,100 @@ public class Run {
 					sim[i+1][j+1] = getSimilarity(image, x+i, y+j, pattern);
 				}	
 			}
+			
+			int xTemp = 1;
+			int yTemp = 1;
+
+			for(int i = 0; i < 3; i++){
+				for(int j = 0; j < 3; j++){
+					if(sim[i][j] > sim[xTemp][yTemp]){
+						xTemp = i;
+						yTemp = j;
+					}
+				}	
+			}
+
+
+			if(sim[xTemp][yTemp] > thr1){
+				y += yTemp - 1;
+				x += xTemp - 1;
+			} else {
+			}
+
+			boolean[] left = findLeft(image, pattern, x, y,thrL);
+			boolean[] right = findRight(image, pattern, x, y, thrR);
+			for(int i = 100 - 1, j = 150; i >= 0; i--, j--)
+			{
+				waferMap[index][j] = left[i];
+			}
+			for(int i = 0, j = 150; i < 100; i++, j++)
+			{
+				waferMap[index][j] = right[i];
+			}
+		}
+
+		x = x0;
+		y = y0;
+
+		index = 150;
+		for( ; index < 300 && y < image.getHeight() - pattern.getHeight() - 1; y += pattern.getWidth(), index++){
+			sim = new float[3][3];
+
+			for(int i = -1; i <= 1; i++){
+				for(int j = -1; j <= 1; j++){
+					sim[i+1][j+1] = getSimilarity(image, x+i, y+j, pattern);
+				}	
+			}
+
+			int xTemp = 1;
+			int yTemp = 1;
+
+			for(int i = 0; i < 3; i++){
+				for(int j = 0; j < 3; j++){
+					if(sim[i][j] > sim[xTemp][yTemp]){
+						xTemp = i;
+						yTemp = j;
+					}
+				}	
+			}
+
+			if(sim[xTemp][yTemp] > thr2){
+				y += yTemp - 1;
+				x += xTemp - 1;
+			} else {
+			}
+
+			boolean[] right = findRight(image, pattern, x, y, thrR);
+			boolean[] left = findLeft(image, pattern, x, y, thrL);
+			for(int i = 100 - 1, j = 150; i >= 0; i--, j--)
+			{
+				waferMap[index][j] = left[i];
+			}
+			for(int i = 0, j = 150; i < 100; i++, j++)
+			{
+				waferMap[index][j] = right[i];
+			}
 
 		}
 	}
 	
 	
+	private static boolean[] findLeft(BufferedImage image, BufferedImage pattern, int x, int y, float thrL) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+
+	private static boolean[] findRight(BufferedImage image, BufferedImage pattern, int x, int y, float thrR) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+
 	private static float getSimilarity(BufferedImage image, int i, int j, BufferedImage pattern) {
 		// TODO Auto-generated method stub
 		return 0;

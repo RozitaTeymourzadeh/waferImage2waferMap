@@ -38,7 +38,7 @@ Contrast is the difference in luminance or color that makes an object (or its re
 ## Edge Detection Filter 
 Edge detection filter defines a complete die mask and considers it as health die. Then it tries to find a matching chip die size by applying edge detection technique. Fatal die processor can be detected by detecting faulty edge less than a certain threshold and the algorithm will ignore the NOK die in the mass production in the factory line.  
 
-## Noise removal Filter 
+## Noise Removal Filter 
 Noise removal filter tries to detect background noise from the image and remove it from the whole process.
 
 ## Crop Filter 

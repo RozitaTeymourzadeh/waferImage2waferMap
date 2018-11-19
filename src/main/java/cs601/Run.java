@@ -3,8 +3,11 @@
  */
 package cs601;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,8 +56,60 @@ public class Run {
 	
 	
 
-	private static void convert(File file) {
-		System.out.println(file.length());
+	private static void convert(File imageFile) {
+		BufferedImage image = null;
+		String prefix = imageFile.getAbsolutePath();
+		String fileName = imageFile.getName(); 
+		// get rid of .jpg
+		if(fileName.indexOf(".") > 0) {
+			fileName = fileName.substring(0, fileName.lastIndexOf(".") );
+		}
+		try {
+			image = ImageIO.read(imageFile);
+			LOG.info("Processing" + imageFile.getAbsolutePath());
+		} catch(IOException e) {
+			LOG.error("Failed in" + imageFile.getAbsolutePath());
+			return;
+			
+		}
 		
+		int height = image.getHeight();
+		int width = image.getWidth();
+		int hStep = 1;
+		int wStep = 1;
+		int rqb;
+		LOG.info("Image Height and Width is: " + height + " " + width);
+		
+		int[] stat = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
+		int[] statR = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
+		int[] statG = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
+		int[] statB = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
+		int rgb;
+		/* ---------- Calculate  Black/White Threshold ---------- */
+		for (int h = 1; h < height; h += hStep)
+		{
+			for (int w = 1; w < width; w += wStep)
+			{
+				rgb = image.getRGB(w, h);
+
+				int r = (rgb >> 16) & 0xFF;
+				int g = (rgb >> 8) & 0xFF;
+				int b = (rgb & 0xFF);
+
+				statR[r]++;
+				statG[g]++;
+				statB[b]++;
+
+				stat[makeRGB(rgb)]++;
+			}
+		}
+	}
+
+
+
+
+	private static int makeRGB(int rgb) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

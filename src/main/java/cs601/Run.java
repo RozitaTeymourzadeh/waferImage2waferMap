@@ -485,9 +485,57 @@ public class Run {
 
 
 
-	private static boolean[] findRight(BufferedImage image, BufferedImage pattern, int x, int y, float thrR) {
+	private static boolean[] findRight(BufferedImage img, BufferedImage pattern, int x, int y, float thrR){
+		boolean debug = false;
+		boolean[] res = new boolean[100];
+		int index = 0;
+		for( ; index < 100 && x < img.getWidth() - pattern.getWidth() - 1; x += pattern.getWidth(), index++){
+			float[][] sim = new float[3][3];
+
+			for(int i = -1; i <= 1; i++){
+				for(int j = -1; j <= 1; j++){
+					sim[i+1][j+1] = getSimilarity(img, x+i, y+j, pattern);
+					if(debug)
+						savePNGCache(img, "cache"+index+"_"+(x+i)+"."+(y+j)+"_"+i+"."+j+"_"+sim[i+1][j+1]+".bmp", x+i, y+j, x+i+pattern.getWidth(), y+j+pattern.getHeight());
+					if(debug)
+						System.out.print("("+i+","+j+") = "+sim[i+1][j+1]+"	");
+				}	
+			}
+
+			int xTemp = 1;
+			int yTemp = 1;
+
+			for(int i = 0; i < 3; i++){
+				for(int j = 0; j < 3; j++){
+					if(sim[i][j] > sim[xTemp][yTemp]){
+						xTemp = i;
+						yTemp = j;
+					}
+				}
+			}
+
+			if(sim[xTemp][yTemp] > thrR){
+				res[index] = true;
+				y += yTemp - 1;
+				x += xTemp - 1;
+			} else {
+				res[index] = false;
+			}
+		}
+
+		for(; index < 100; index++){
+			res[index] = false;
+		}
+
+		return res;
+	}
+
+
+
+
+	private static void savePNGCache(BufferedImage img, String string, int i, int j, int k, int l) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 

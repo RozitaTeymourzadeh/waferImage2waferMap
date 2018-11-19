@@ -4,6 +4,7 @@
 package cs601;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -615,9 +616,13 @@ public class Run {
 
 
 
-	private static void savePNG(BufferedImage image, String string) {
-		// TODO Auto-generated method stub
-		
+	private static void savePNG( final BufferedImage bi, final String path ){
+		try {
+			RenderedImage rendImage = bi;
+			ImageIO.write(rendImage, "png", new File(path));
+		} catch ( IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static BufferedImage map(int width, int height) {

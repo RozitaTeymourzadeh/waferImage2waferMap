@@ -30,21 +30,24 @@ DUTMS:mm      die units of measurement (mm or mil)
 XDIES:2.945   step along X
 YDIES:2.945   step along Y
 ```
-### Image Contrast 
+## Image Definition
+Wafer image is RGB color space. RGB color space or RGB color system, constructs all the colors from the combination of the Red, Green and Blue colors.
+The red, green and blue use 8 bits each, which have integer values from 0 to 255. This makes 256*256*256=16777216 possible colors. See [Image Defination](https://www.rapidtables.com/web/color/RGB_Color.html). 
 
+
+### Image Contrast 
 Contrast is the difference in luminance or color that makes an object (or its representation in an image or display) distinguishable. In visual perception of the real world, contrast is determined by the difference in the color and brightness of the object and other objects within the same field of view. (Wikipedia). Brightness and contrast factors are significant factors that could result in failing or passing the ASIC processor component from the image. these factors will be set in the configuration file. 
 
-### Digital Filters
-## Edge Detection Filter 
+### Edge Detection Filter 
 Edge detection filter defines a complete die mask and considers it as health die. Then it tries to find a matching chip die size by applying edge detection technique. Fatal die processor can be detected by detecting faulty edge less than a certain threshold and the algorithm will ignore the NOK die in the mass production in the factory line.  
 
-## Noise Removal Filter 
+### Noise Removal Filter 
 Noise removal filter tries to detect background noise from the image and remove it from the whole process.
 
-## Crop Filter 
+### Crop Filter 
 Crop filter detects the wafer boundary and crops the image to reduce the unnecessary data processing throughout the whole image processing. 
 
-## Expected Result
+### Expected Result
 The output file contains converted SINF format file to be read from CNC machine in the factory line. 
 
 

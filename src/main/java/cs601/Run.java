@@ -571,17 +571,45 @@ public class Run {
 
 
 
-	private static float getSimilarity(BufferedImage image, int i, int j, BufferedImage pattern) {
-		// TODO Auto-generated method stub
-		return 0;
+	static int cacheCounter = 0;
+	private static float getSimilarity(BufferedImage img, int x, int y, BufferedImage pattern){
+		float diff = 0;
+
+		int width = pattern.getWidth();
+		int height = pattern.getHeight();
+
+		BufferedImage cache = map(width, height);
+
+		int counter = 0;
+
+		float diameter = (float) Math.sqrt((width*width + height*height)) / 2;
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				counter++;
+				if((x+i) >= img.getWidth() || (y+j) >= img.getHeight() || img.getRGB(x+i, y+j) != pattern.getRGB(i, j)){
+					diff += (float) Math.sqrt((width/2 - i)*(width/2 - i) + (height/2 - j)*(height/2 - j)) / diameter;
+				} else{
+				}
+			}
+		}
+
+		float res = 1 - diff / counter;//(width * height);
+		return res*res*res*res;
 	}
 
 
-
-
-	private static BufferedImage getPattern(int[] dieSize) {
-		// TODO Auto-generated method stub
-		return null;
+	private static BufferedImage getPattern(int[] size){
+		BufferedImage res = map(size[0], size[1]);
+		for(int i = 0; i < size[0]; i++){
+			for(int j = 0; j < size[1]; j++){
+				if(i == 0 || i == size[0] - 1 || j == 0 || j == size[1] - 1){
+					res.setRGB(i, j, 0xFFFFFF);
+				} else {
+					res.setRGB(i, j, 0);
+				}
+			}
+		}
+		return res;
 	}
 
 

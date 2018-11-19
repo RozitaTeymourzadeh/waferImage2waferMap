@@ -20,11 +20,19 @@ import org.junit.Test;
 public class UnitTest {
 
 	private static ConfigManager CONFIG = null;
+
 	
 	@Test
 	public void testConfig() throws IOException {
 		CONFIG = ConfigManager.getConfig();
 		Assert.assertNotNull(CONFIG);
+	}
+	
+	@Test
+	public void testCache() throws IOException {
+		File folder = new File(ConfigManager.getConfig().getInput());
+		File cacheFolder = new File(folder.getParent(), "cache");
+		Assert.assertNotNull(cacheFolder);
 	}
 	
 	@Test

@@ -261,14 +261,35 @@ public class Run {
 
 		width = rightLine - leftLine + 1;
 		height = endLine - startLine + 1;
+		
+		/* ----------crop image----------*/
+		BufferedImage imgOriginal = image;
+		image = map(width, height);
+		for (int w = leftLine; w <= rightLine; w++)
+		{
+			for (int h = startLine; h < endLine; h++)
+			{
+				image.setRGB(w - leftLine, h - startLine, imgOriginal.getRGB(w, h));
+			}
+		}
+		savePNG(image, prefix+"_Crop.png");
 	}
-	private static int[] calcSize(BufferedImage image, int i, int j, int k, int l) {
+	
+	
+	private static void savePNG(BufferedImage image, String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static BufferedImage map(int width, int height) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
-
+	private static int[] calcSize(BufferedImage image, int i, int j, int k, int l) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	/**
 	 * makeRGB

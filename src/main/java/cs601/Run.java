@@ -401,6 +401,45 @@ public class Run {
 			}
 
 		}
+		
+		int iStart = 0;
+		int iEnd = 300 - 1;
+		int jStart = 0;
+		int jEnd = 300 - 1;
+
+		for(int i = iStart; i < 300 && iStart == 0; i++){
+			for(int j = jStart; j <= jEnd; j++){
+				if(waferMap[i][j]){
+					iStart = i;
+					break;
+				}
+			}
+		}
+		for(int i = iEnd; i > iStart && iEnd == 300 - 1; i--){
+			for(int j = jStart; j <= jEnd; j++){
+				if(waferMap[i][j]){
+					iEnd = i;
+					break;
+				}
+			}
+		}
+		for(int j = jStart; j < 300 && jStart == 0; j++){
+			for(int i = iStart; i <= iEnd; i++){
+				if(waferMap[i][j]){
+					jStart = j;
+					break;
+				}
+			}
+		}
+		for(int j = jEnd - 1; j > jStart && jEnd == 300 - 1; j--){
+			for(int i = iStart; i <= iEnd; i++){
+				if(waferMap[i][j]){
+					jEnd = j;
+					break;
+				}
+			}
+		}
+
 	}
 	
 	

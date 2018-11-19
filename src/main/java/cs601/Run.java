@@ -626,7 +626,18 @@ public class Run {
 	}
 
 	private static int[] calcSize(BufferedImage image, int i, int j, int k, int l) {
-		// TODO Auto-generated method stub
+
+		int dieHeight = 0;
+		int spaceHeight = 0;
+		int dieWidth = 0;
+		int spaceWidth = 0;
+
+		int[] die = new int[100];
+		int[] space = new int[100];
+
+		int counterDie = 0;
+		int counterSpace = 0;
+		
 		return null;
 	}
 

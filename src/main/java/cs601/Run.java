@@ -273,9 +273,28 @@ public class Run {
 			}
 		}
 		savePNG(image, prefix+"_Crop.png");
+		
+		/* ----------To calculate and print Die size----------*/ 	
+		//         dieSize = calcSize(img, 0, img.getWidth() - 1, 0, img.getHeight() - 1);
+		//         System.out.println("size: "+dieSize[0]+" x "+dieSize[1]);
+		//         System.out.println("array = "+(Float.valueOf(width) / dieSize[0])+" x "+(Float.valueOf(height) / dieSize[1]));
+
+		BufferedImage pattern = getPattern(dieSize);
+		savePNG(pattern, prefix+"_Pattern.png");
+
+
+
 	}
 	
 	
+	private static BufferedImage getPattern(int[] dieSize) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+
 	private static void savePNG(BufferedImage image, String string) {
 		// TODO Auto-generated method stub
 		

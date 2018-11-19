@@ -63,10 +63,10 @@ public class Run {
 	private static void convert(File imageFile) {
 		BufferedImage image = null;
 		String prefix = imageFile.getAbsolutePath();
-		String fileName = imageFile.getName(); 
+		String imageName = imageFile.getName(); 
 		// get rid of .jpg
-		if(fileName.indexOf(".") > 0) {
-			fileName = fileName.substring(0, fileName.lastIndexOf(".") );
+		if(imageName.indexOf(".") > 0) {
+			imageName = imageName.substring(0, imageName.lastIndexOf(".") );
 		}
 		try {
 			image = ImageIO.read(imageFile);
@@ -81,14 +81,14 @@ public class Run {
 		int width = image.getWidth();
 		int hStep = 1;
 		int wStep = 1;
-		int rqb;
+		int rgb;
 		LOG.info("Image Height and Width is: " + height + " x " + width);
 
 		int[] stat = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
 		int[] statR = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
 		int[] statG = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
 		int[] statB = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
-		int rgb;
+
 		/* ---------- Calculate  Black/White Threshold ---------- */
 		for (int h = 1; h < height; h += hStep)
 		{
@@ -96,13 +96,13 @@ public class Run {
 			{
 				rgb = image.getRGB(w, h);
 				//mask rgb and separate the index
-				int r = (rgb >> 16) & 0xFF;
-				int g = (rgb >> 8) & 0xFF;
-				int b = (rgb & 0xFF);
+				int red = (rgb >> 16) & 0xFF;
+				int green = (rgb >> 8) & 0xFF;
+				int blue = (rgb & 0xFF);
 
-				statR[r]++;
-				statG[g]++;
-				statB[b]++;
+				statR[red]++;
+				statG[green]++;
+				statB[blue]++;
 
 				stat[makeRGB(rgb)]++;
 			}
@@ -446,7 +446,7 @@ public class Run {
 		
 		try {
 			int lineNum = 1;
-			File mapFile = new File(ConfigManager.getConfig().getOutput(), fileName +".txt");
+			File mapFile = new File(ConfigManager.getConfig().getOutput(), imageName +".txt");
 			BufferedWriter output;
 			output = new BufferedWriter(new FileWriter(mapFile));
 

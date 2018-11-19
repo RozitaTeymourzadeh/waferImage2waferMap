@@ -19,12 +19,12 @@ import org.apache.logging.log4j.Logger;
 public class Run {
 	private static Logger LOG = LogManager.getLogger(Run.class);
 	private static File cacheFolder = null;
-	
+
 	public static void main(String[] args) {
-		
+
 		LOG.info("Convesion is started ..." + Run.class.getName());
 		ConfigManager.getConfig().getInput();
-		
+
 		File folder = new File(ConfigManager.getConfig().getInput());//Read the waferIMG file
 		cacheFolder = new File(folder.getParent(), "cache");
 		// create cache file
@@ -34,7 +34,7 @@ public class Run {
 		} catch(Exception e) {
 			LOG.error("FATAL: Exception occured while generating cache file in: " + Run.class.getName());
 		}
-		
+
 		// read file
 		File[] imgs = folder.listFiles();
 		for(int i = 0; i < imgs.length; i++){
@@ -42,7 +42,7 @@ public class Run {
 				convert(imgs[i]);
 			}
 		}
-		
+
 		// Delet processed files
 		File[] imgsProcessed  = folder.listFiles();
 		for(int i1 = 0 ; i1 < imgsProcessed.length ; i1++) {
@@ -52,9 +52,9 @@ public class Run {
 		}
 		LOG.info("Conversion Process was completed!!");
 	}
-	
-	
-	
+
+
+
 
 	private static void convert(File imageFile) {
 		BufferedImage image = null;
@@ -70,16 +70,16 @@ public class Run {
 		} catch(IOException e) {
 			LOG.error("Failed in" + imageFile.getAbsolutePath());
 			return;
-			
+
 		}
-		
+
 		int height = image.getHeight();
 		int width = image.getWidth();
 		int hStep = 1;
 		int wStep = 1;
 		int rqb;
 		LOG.info("Image Height and Width is: " + height + " " + width);
-		
+
 		int[] stat = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
 		int[] statR = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
 		int[] statG = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
@@ -91,7 +91,7 @@ public class Run {
 			for (int w = 1; w < width; w += wStep)
 			{
 				rgb = image.getRGB(w, h);
-
+				//mask rgb and separate the index
 				int r = (rgb >> 16) & 0xFF;
 				int g = (rgb >> 8) & 0xFF;
 				int b = (rgb & 0xFF);
@@ -106,10 +106,17 @@ public class Run {
 	}
 
 
-
-
+	/**
+	 * makeRGB
+	 * Generate RGB from r, g, b index
+	 *
+	 *@param rgb
+	 *@return RGB
+	 */
 	private static int makeRGB(int rgb) {
-		// TODO Auto-generated method stub
-		return 0;
+		float r = (rgb >> 16) & 0xFF;
+		float g = (rgb >> 8) & 0xFF;
+		float b = (rgb & 0xFF);
+		return (int)(r*0.299 + g*0.587 + b*0.114);
 	}
 }

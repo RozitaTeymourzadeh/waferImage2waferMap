@@ -115,7 +115,7 @@ public class Run {
 		for(int i = 0; i < maxLimit; i++){
 			LOG.info("RGB states are: " + stat[i] + "	" + statR[i] + "	" + statG[i] + " " + statB[i]);
 		}
-		
+
 		/*  ---------- Normalize RGB to Black and White ---------- */
 		for (int h = 1; h < height; h+=hStep)
 		{
@@ -145,7 +145,7 @@ public class Run {
 				image.setRGB(w / wStep, h / hStep, rgb);
 			}
 		}
-		
+
 		int[] dieSize = calcSize(image, 0, image.getWidth() - 1, 0, image.getHeight() - 1);
 		// th, tolerance are Die size parameters
 		float th = 1.5f;
@@ -175,6 +175,31 @@ public class Run {
 			}
 		}
 		
+		/* ---------- find bottom ---------- */
+
+		int endLine = image.getHeight() - 1;
+		lineCounter = 0;
+		for (int h = endLine; h > startLine ; h--)
+		{
+			int pixelCounter = 0;
+			for (int w = 1; w < image.getWidth(); w++)
+			{
+				if(makeRGB(image.getRGB(w, h)) == 0){
+					pixelCounter++;
+				}
+			}
+			if(pixelCounter > (th * dieSize[1])){
+				lineCounter++;
+			} else{
+				lineCounter = 0;
+			}
+
+			if(lineCounter == tolerance){
+				endLine = h + tolerance + 1;
+				break;
+			}
+		}
+
 		/* ----------find left---------- */
 
 		int leftLine = 0;
@@ -199,9 +224,44 @@ public class Run {
 				break;
 			}
 		}
+
+		/* ----------find right----------*/
+		int rightLine = image.getWidth() - 1;
+		lineCounter = 0;
+		for (int w = rightLine; w > leftLine; w--)
+		{
+			int pixelCounter = 0;
+			for (int h = 0; h < image.getHeight() ; h++)
+			{
+				if(makeRGB(image.getRGB(w, h)) == 0){
+					pixelCounter++;
+				}
+			}
+			if(pixelCounter > (th * dieSize[0])){
+				lineCounter++;
+			} else{
+				lineCounter = 0;
+			}
+
+			if(lineCounter == tolerance){
+				rightLine = w + tolerance + 1;
+				break;
+			}
+		}
+		
+		leftLine = leftLine - dieSize[0];
+		rightLine = rightLine + dieSize[0];
+		startLine = startLine - dieSize[1];
+		endLine = endLine + dieSize[1];
+
+		leftLine = leftLine >=0 ? leftLine : 0;
+		rightLine = rightLine < image.getWidth() ? rightLine : image.getWidth() - 1;
+		startLine = startLine >=0 ? startLine : 0;
+		endLine = endLine < image.getHeight() ? endLine : image.getHeight() - 1;
+
+		width = rightLine - leftLine + 1;
+		height = endLine - startLine + 1;
 	}
-
-
 	private static int[] calcSize(BufferedImage image, int i, int j, int k, int l) {
 		// TODO Auto-generated method stub
 		return null;

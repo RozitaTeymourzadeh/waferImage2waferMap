@@ -174,6 +174,31 @@ public class Run {
 				break;
 			}
 		}
+		
+		/* ----------find left---------- */
+
+		int leftLine = 0;
+		lineCounter = 0;
+		for (int w = leftLine; w < image.getWidth(); w++)
+		{
+			int pixelCounter = 0;
+			for (int h = 0; h < image.getHeight() ; h++)
+			{
+				if(makeRGB(image.getRGB(w, h)) == 0){
+					pixelCounter++;
+				}
+			}
+			if(pixelCounter > (th * dieSize[1])){
+				lineCounter++;
+			} else{
+				lineCounter = 0;
+			}
+
+			if(lineCounter == tolerance){
+				leftLine = w - tolerance - 1;
+				break;
+			}
+		}
 	}
 
 

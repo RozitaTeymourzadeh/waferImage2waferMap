@@ -78,7 +78,7 @@ public class Run {
 		int hStep = 1;
 		int wStep = 1;
 		int rqb;
-		LOG.info("Image Height and Width is: " + height + " " + width);
+		LOG.info("Image Height and Width is: " + height + " x " + width);
 
 		int[] stat = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
 		int[] statR = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
@@ -103,7 +103,86 @@ public class Run {
 				stat[makeRGB(rgb)]++;
 			}
 		}
+
+		int max = 0;
+		int maxLimit = Integer.parseInt(ConfigManager.getConfig().getGrayScale());
+		for(int i = 0; i < maxLimit; i++){
+			if(stat[i] > stat[max])
+				max = i;
+		}
+
+		/*  ---------- To Print RGB State ---------- */ 
+		for(int i = 0; i < maxLimit; i++){
+			LOG.info("RGB states are: " + stat[i] + "	" + statR[i] + "	" + statG[i] + " " + statB[i]);
+		}
+		
+		/*  ---------- Normalize RGB to Black and White ---------- */
+		for (int h = 1; h < height; h+=hStep)
+		{
+			for (int w = 1; w<width; w+=wStep)
+			{
+				rgb = image.getRGB(w, h);
+
+				int r = (rgb >> 16) & 0xFF;
+				int g = (rgb >> 8) & 0xFF;
+				int b = (rgb & 0xFF);
+
+				rgb = makeRGB(rgb);
+
+				for(int x = 0; x < wStep && w+x < width; x++){
+					for(int y = 0; y < hStep && h+y < height; y++){
+						int value = image.getRGB(w+x, h+y);
+						rgb += makeRGB(value);
+					}
+				}
+				rgb /= (wStep * wStep);
+				// b as blue component to detect b/w cropped image
+				if(b < 40){
+					rgb = 0;
+				} else {
+					rgb = 0xFFFFFF;
+				}
+				image.setRGB(w / wStep, h / hStep, rgb);
+			}
+		}
+		
+		int[] dieSize = calcSize(image, 0, image.getWidth() - 1, 0, image.getHeight() - 1);
+		// th, tolerance are Die size parameters
+		float th = 1.5f;
+		int tolerance = 5;// defined distance btw 2 dies, 
+
+		/* ----------find top---------- */
+		int startLine = 0;
+		int lineCounter = 0;
+		for (int h = startLine; h < image.getHeight(); h++)
+		{
+			int pixelCounter = 0;
+			for (int w = 1; w < image.getWidth(); w++)
+			{
+				if(makeRGB(image.getRGB(w, h)) == 0){
+					pixelCounter++;
+				}
+			}
+			if(pixelCounter > (th * dieSize[1])){
+				lineCounter++;
+			} else{
+				lineCounter = 0;
+			}
+
+			if(lineCounter == tolerance){
+				startLine = h - tolerance - 1;
+				break;
+			}
+		}
 	}
+
+
+	private static int[] calcSize(BufferedImage image, int i, int j, int k, int l) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 
 	/**

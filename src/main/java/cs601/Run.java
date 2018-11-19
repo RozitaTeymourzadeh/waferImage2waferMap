@@ -3,6 +3,7 @@
  */
 package cs601;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.BufferedWriter;
@@ -562,16 +563,6 @@ public class Run {
 	}
 
 
-
-
-	private static void savePNGCache(BufferedImage img, String string, int i, int j, int k, int l) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
 	static int cacheCounter = 0;
 	private static float getSimilarity(BufferedImage img, int x, int y, BufferedImage pattern){
 		float diff = 0;
@@ -625,9 +616,14 @@ public class Run {
 		}
 	}
 
-	private static BufferedImage map(int width, int height) {
-		// TODO Auto-generated method stub
-		return null;
+	private static BufferedImage map( int sizeX, int sizeY ){
+		final BufferedImage res = new BufferedImage( sizeX, sizeY, BufferedImage.TYPE_INT_RGB );
+		for (int x = 0; x < sizeX; x++){
+			for (int y = 0; y < sizeY; y++){
+				res.setRGB(x, y, Color.WHITE.getRGB() );
+			}
+		}
+		return res;
 	}
 
 	private static int[] calcSize(BufferedImage img, int left, int right, int top, int bottom){

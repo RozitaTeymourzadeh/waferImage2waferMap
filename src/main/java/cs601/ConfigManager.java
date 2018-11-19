@@ -91,4 +91,34 @@ public class ConfigManager {
 		}
 		return result;
 	}	
+	
+	/**
+	 * 
+	 * redIndex
+	 * 
+	 */
+	public String getRedIndex() {
+		String result = "";
+		if(prop.get("redIndex") != null) {
+			result = prop.get("redIndex").toString();
+		}else {
+			System.out.println("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}
+	
+	/**
+	 * 
+	 * greenIndex
+	 * 
+	 */
+	public String getGreenIndex() {
+		String result = "";
+		if(prop.get("greenIndex") != null) {
+			result = prop.get("greenIndex").toString();
+		}else {
+			System.out.println("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}
 }

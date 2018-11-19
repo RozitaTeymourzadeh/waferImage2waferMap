@@ -1,3 +1,5 @@
 input=waferIMG
 output=waferTXT
 grayScale=256
+redIndex=16
+greenIndex=8

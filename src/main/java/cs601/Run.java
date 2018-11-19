@@ -275,18 +275,70 @@ public class Run {
 		savePNG(image, prefix+"_Crop.png");
 		
 		/* ----------To calculate and print Die size----------*/ 	
-		//         dieSize = calcSize(img, 0, img.getWidth() - 1, 0, img.getHeight() - 1);
-		//         System.out.println("size: "+dieSize[0]+" x "+dieSize[1]);
-		//         System.out.println("array = "+(Float.valueOf(width) / dieSize[0])+" x "+(Float.valueOf(height) / dieSize[1]));
 
 		BufferedImage pattern = getPattern(dieSize);
 		savePNG(pattern, prefix+"_Pattern.png");
+		float thr1 = 0.3f; //Pattern similarity percentage for upper part of image
+		float thr2 = 0.3f; //Pattern similarity percentage for down part of image
+		float thrL = 0.3f;
+		float thrR = 0.3f;
 
+		boolean[][] waferMap = new boolean[300][300];
 
+		for(int i = 0; i < 300; i++){
+			for(int j = 0; j < 300; j++){
+				waferMap[i][j] = false;
+			}	
+		}
 
+		int x = width / 2;
+		int y = height / 2;
+
+		float[][] sim = new float[pattern.getWidth()][pattern.getHeight()];
+
+		for(int i = 0; i < pattern.getWidth(); i++){
+			for(int j = 0; j < pattern.getHeight(); j++){
+				sim[i][j] = getSimilarity(image, x+i, y+j, pattern);
+			}
+		}
+		int x0 = 0;
+		int y0 = 0;
+		for(int i = 0; i < pattern.getWidth(); i++){
+			for(int j = 0; j < pattern.getHeight(); j++){
+				if(sim[i][j] > sim[x0][y0]){
+					x0 = i;
+					y0 = j;
+				}
+			}
+		}
+		x0 += x;
+		y0 += y;
+
+		x = x0;
+		y = y0;
+
+		int index = 150;
+		for( ; index > 0 && y > 1; y -= pattern.getWidth(), index--){
+			sim = new float[3][3];
+
+			for(int i = -1; i <= 1; i++){
+				for(int j = -1; j <= 1; j++){
+					sim[i+1][j+1] = getSimilarity(image, x+i, y+j, pattern);
+				}	
+			}
+
+		}
 	}
 	
 	
+	private static float getSimilarity(BufferedImage image, int i, int j, BufferedImage pattern) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+
 	private static BufferedImage getPattern(int[] dieSize) {
 		// TODO Auto-generated method stub
 		return null;

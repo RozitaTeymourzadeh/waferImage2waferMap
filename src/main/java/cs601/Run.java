@@ -57,9 +57,6 @@ public class Run {
 		LOG.info("Conversion Process was completed!!");
 	}
 
-
-
-
 	private static void convert(File imageFile) {
 		BufferedImage image = null;
 		String prefix = imageFile.getAbsolutePath();
@@ -70,7 +67,7 @@ public class Run {
 		}
 		try {
 			image = ImageIO.read(imageFile);
-			LOG.info("Processing" + imageName);
+			LOG.info("Processing image: " + imageName + "...");
 		} catch(IOException e) {
 			LOG.error("Failed in" + imageFile.getAbsolutePath());
 			return;
@@ -95,7 +92,7 @@ public class Run {
 			{
 				rgb = image.getRGB(w, h);
 				//mask rgb and separate the index
-				Integer redIndex = Integer.parseInt(ConfigManager.getConfig().getGreenIndex());
+				Integer redIndex = Integer.parseInt(ConfigManager.getConfig().getRedIndex());
 				Integer greenIndex = Integer.parseInt(ConfigManager.getConfig().getGreenIndex());
 				int red = (rgb >> redIndex) & 0xFF;
 				int green = (rgb >> greenIndex) & 0xFF;
@@ -108,7 +105,7 @@ public class Run {
 				stat[makeRGB(rgb)]++;
 			}
 		}
-// find maximum index of state
+		// find maximum index of state
 		int max = 0;
 		int maxLimit = Integer.parseInt(ConfigManager.getConfig().getGrayScale());
 		for(int i = 0; i < maxLimit; i++){
@@ -116,20 +113,14 @@ public class Run {
 				max = i;
 		}
 
-		/*  ---------- To Print RGB State ---------- */ 
-//		for(int i = 0; i < maxLimit; i++){
-//			LOG.info("RGB states are: " + stat[i] + " " + statR[i] + " " + statG[i] + " " + statB[i]);
-//		}
-
 		/*  ---------- Normalize RGB to Black and White ---------- */
 		for (int h = 1; h < height; h+=hStep)
 		{
 			for (int w = 1; w<width; w+=wStep)
 			{
 				rgb = image.getRGB(w, h);
-				int b = (rgb & 0xFF);
-
 				rgb = makeRGB(rgb);
+				int blue = (rgb & 0xFF);
 
 				for(int x = 0; x < wStep && w+x < width; x++){
 					for(int y = 0; y < hStep && h+y < height; y++){
@@ -138,11 +129,12 @@ public class Run {
 					}
 				}
 				rgb /= (wStep * wStep);
-				// b as blue component to detect b/w cropped image
-				if(b < 40){
-					rgb = 0;
+				// blue as blue component to detect b/w cropped image
+				 Integer blackWhiteThr = Integer.parseInt(ConfigManager.getConfig().getBlackWhiteThr());
+				if(blue < blackWhiteThr){
+					rgb = 0; // convert to black
 				} else {
-					rgb = 0xFFFFFF;
+					rgb = 0xFFFFFF; // convert to white
 				}
 				image.setRGB(w / wStep, h / hStep, rgb);
 			}

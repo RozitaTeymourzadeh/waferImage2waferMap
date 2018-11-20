@@ -66,6 +66,12 @@ public class UnitTest {
 	}
 	
 	@Test
+	public void testBlackWhiteThr() throws IOException {
+		String blackWhiteThr = ConfigManager.getConfig().getBlackWhiteThr();
+		Assert.assertEquals(40, Integer.parseInt(blackWhiteThr));
+	}
+	
+	@Test
 	public void testImage() throws IOException {
 		File folder = new File(ConfigManager.getConfig().getInput());
 		File[] imgs = folder.listFiles();

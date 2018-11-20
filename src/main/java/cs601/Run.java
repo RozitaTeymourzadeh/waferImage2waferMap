@@ -57,6 +57,9 @@ public class Run {
 		LOG.info("Conversion Process was completed!!");
 	}
 
+
+
+
 	private static void convert(File imageFile) {
 		BufferedImage image = null;
 		String prefix = imageFile.getAbsolutePath();
@@ -67,9 +70,9 @@ public class Run {
 		}
 		try {
 			image = ImageIO.read(imageFile);
-			LOG.info("Processing image: " + imageName + "...");
+			LOG.info("Start processing image: \"" + imageName + "\" ......");
 		} catch(IOException e) {
-			LOG.error("Failed in" + imageFile.getAbsolutePath());
+			LOG.error("FATAL: Failed in processing image: " + imageFile.getAbsolutePath());
 			return;
 		}
 
@@ -119,8 +122,9 @@ public class Run {
 			for (int w = 1; w<width; w+=wStep)
 			{
 				rgb = image.getRGB(w, h);
-				rgb = makeRGB(rgb);
 				int blue = (rgb & 0xFF);
+
+				rgb = makeRGB(rgb);
 
 				for(int x = 0; x < wStep && w+x < width; x++){
 					for(int y = 0; y < hStep && h+y < height; y++){
@@ -130,20 +134,25 @@ public class Run {
 				}
 				rgb /= (wStep * wStep);
 				// blue as blue component to detect b/w cropped image
-				 Integer blackWhiteThr = Integer.parseInt(ConfigManager.getConfig().getBlackWhiteThr());
+				Integer blackWhiteThr = Integer.parseInt(ConfigManager.getConfig().getBlackWhiteThr());
 				if(blue < blackWhiteThr){
-					rgb = 0; // convert to black
+					rgb = 0;
 				} else {
-					rgb = 0xFFFFFF; // convert to white
+					rgb = 0xFFFFFF;
 				}
 				image.setRGB(w / wStep, h / hStep, rgb);
 			}
 		}
 
 		int[] dieSize = calcSize(image, 0, image.getWidth() - 1, 0, image.getHeight() - 1);
+		for(int i = 0; i<2; i++)
+		{
+		    LOG.info("Die size is :" + dieSize[i]);
+		}
 		// th, tolerance are Die size parameters
-		float th = 1.5f;
-		int tolerance = 5;// defined distance btw 2 dies, 
+		float dieSizeThr = Float.parseFloat(ConfigManager.getConfig().getDieSizeThr());
+		Integer dieDistanceTolerance = Integer.parseInt(ConfigManager.getConfig().getDieDistanceTolerance());
+//		int tolerance = dieDistanceTolerance;// defined distance btw 2 dies, 
 
 		/* ----------find top---------- */
 		int startLine = 0;
@@ -157,14 +166,14 @@ public class Run {
 					pixelCounter++;
 				}
 			}
-			if(pixelCounter > (th * dieSize[1])){
+			if(pixelCounter > (dieSizeThr * dieSize[1])){
 				lineCounter++;
 			} else{
 				lineCounter = 0;
 			}
 
-			if(lineCounter == tolerance){
-				startLine = h - tolerance - 1;
+			if(lineCounter == dieDistanceTolerance ){
+				startLine = h - dieDistanceTolerance  - 1;
 				break;
 			}
 		}
@@ -182,14 +191,14 @@ public class Run {
 					pixelCounter++;
 				}
 			}
-			if(pixelCounter > (th * dieSize[1])){
+			if(pixelCounter > (dieSizeThr * dieSize[1])){
 				lineCounter++;
 			} else{
 				lineCounter = 0;
 			}
 
-			if(lineCounter == tolerance){
-				endLine = h + tolerance + 1;
+			if(lineCounter == dieDistanceTolerance ){
+				endLine = h + dieDistanceTolerance  + 1;
 				break;
 			}
 		}
@@ -207,14 +216,14 @@ public class Run {
 					pixelCounter++;
 				}
 			}
-			if(pixelCounter > (th * dieSize[1])){
+			if(pixelCounter > (dieSizeThr * dieSize[1])){
 				lineCounter++;
 			} else{
 				lineCounter = 0;
 			}
 
-			if(lineCounter == tolerance){
-				leftLine = w - tolerance - 1;
+			if(lineCounter == dieDistanceTolerance ){
+				leftLine = w - dieDistanceTolerance  - 1;
 				break;
 			}
 		}
@@ -231,14 +240,14 @@ public class Run {
 					pixelCounter++;
 				}
 			}
-			if(pixelCounter > (th * dieSize[0])){
+			if(pixelCounter > (dieSizeThr * dieSize[0])){
 				lineCounter++;
 			} else{
 				lineCounter = 0;
 			}
 
-			if(lineCounter == tolerance){
-				rightLine = w + tolerance + 1;
+			if(lineCounter == dieDistanceTolerance ){
+				rightLine = w + dieDistanceTolerance  + 1;
 				break;
 			}
 		}

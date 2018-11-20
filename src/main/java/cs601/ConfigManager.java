@@ -121,4 +121,19 @@ public class ConfigManager {
 		}
 		return result;
 	}
+	
+	/**
+	 * 
+	 * Black and White Threshold
+	 * 
+	 */
+	public String getBlackWhiteThr() {
+		String result = "";
+		if(prop.get("blackWhiteThr") != null) {
+			result = prop.get("blackWhiteThr").toString();
+		}else {
+			System.out.println("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}
 }

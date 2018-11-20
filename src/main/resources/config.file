@@ -4,3 +4,5 @@ grayScale=256
 redIndex=16
 greenIndex=8
 blackWhiteThr=40
+dieSizeThr=1.5f
+dieDistanceTolerance=5

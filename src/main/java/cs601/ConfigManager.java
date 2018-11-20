@@ -76,7 +76,7 @@ public class ConfigManager {
 		}
 		return result;
 	}	
-	
+
 	/**
 	 * 
 	 * grayScale
@@ -91,7 +91,7 @@ public class ConfigManager {
 		}
 		return result;
 	}	
-	
+
 	/**
 	 * 
 	 * redIndex
@@ -106,7 +106,7 @@ public class ConfigManager {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * greenIndex
@@ -121,7 +121,7 @@ public class ConfigManager {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * Black and White Threshold
@@ -136,4 +136,39 @@ public class ConfigManager {
 		}
 		return result;
 	}
+
+
+	/**
+	 * 
+	 * Die Size Threshold
+	 * 1.5f
+	 * 
+	 */
+	public String getDieSizeThr() {
+		String result = "";
+		if(prop.get("dieSizeThr") != null) {
+			result = prop.get("dieSizeThr").toString();
+		}else {
+			System.out.println("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}	
+
+	/**
+	 * 
+	 * dieDistanceTolerance
+	 * Distance between 2 dies
+	 * 5
+	 * 
+	 */
+	public String getDieDistanceTolerance() {
+		String result = "";
+		if(prop.get("dieDistanceTolerance") != null) {
+			result = prop.get("dieDistanceTolerance").toString();
+		}else {
+			System.out.println("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}	
+
 }

@@ -25,19 +25,14 @@ public class Run {
 	private static File cacheFolder = null;
 
 	public static void main(String[] args) {
-
-		LOG.info("Convesion is started ..." + Run.class.getName());
+		
 		ConfigManager.getConfig().getInput();
-
+		Service srv = new Service();
+		LOG.info("Convesion is started ..." + Run.class.getName());
 		File folder = new File(ConfigManager.getConfig().getInput());//Read the waferIMG file
 		cacheFolder = new File(folder.getParent(), "cache");
 		// create cache file
-		try {
-			cacheFolder.mkdir();
-			LOG.info("Create cache folder:" + cacheFolder.getAbsolutePath());
-		} catch(Exception e) {
-			LOG.error("FATAL: Exception occured while generating cache file in: " + Run.class.getName());
-		}
+		srv.createCache(cacheFolder);
 
 		// read file
 		File[] imgs = folder.listFiles();
@@ -56,6 +51,11 @@ public class Run {
 		}
 		LOG.info("Conversion Process was completed!!");
 	}
+
+
+
+
+
 
 
 

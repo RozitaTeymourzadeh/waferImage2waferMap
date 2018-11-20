@@ -75,11 +75,21 @@ public class UnitTest {
 	public void testImage() throws IOException {
 		File folder = new File(ConfigManager.getConfig().getInput());
 		File[] imgs = folder.listFiles();
-		File imageFile = imgs[0];
+		File imageFile = imgs[1];
 		BufferedImage image = ImageIO.read(imageFile);
 		Assert.assertNotNull(image);
 	}
 	
+	@Test
+	public void testDieSizeThr() throws IOException {
+		String dieSizeThr = ConfigManager.getConfig().getDieSizeThr();
+		Assert.assertEquals(1.5f, Float.parseFloat(dieSizeThr),0.1f);
+	}
 	
+	@Test
+	public void testDieDistanceTolerance() throws IOException {
+		String dieDistanceTolerance = ConfigManager.getConfig().getDieDistanceTolerance();
+		Assert.assertEquals(5, Integer.parseInt(dieDistanceTolerance));
+	}
 	
 }

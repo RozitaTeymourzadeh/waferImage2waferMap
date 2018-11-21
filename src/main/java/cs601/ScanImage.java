@@ -86,14 +86,13 @@ public class ScanImage {
 	}
 	
 	/**
+	 * find Left line of Image 
+	 * 
 	 * @param image
-	 * @param imageTool
 	 * @param dieSize
-	 * @param dieSizeThr
-	 * @param dieDistanceTolerance
-	 * @return
+	 * @return leftLine
 	 */
-	public int finfLeftDiode(BufferedImage image, int[] dieSize) {
+	public int findLeftDiode(BufferedImage image, int[] dieSize) {
 
 		int leftLine = 0;
 		int lineCounter = 0;
@@ -120,6 +119,37 @@ public class ScanImage {
 		return leftLine;
 	}
 
+	/**
+	 * @param image
+	 * @param dieSize
+	 * @param leftLine
+	 * @return rightLine
+	 */
+	public int findRightDiode(BufferedImage image, int[] dieSize, int leftLine) {
+		int rightLine = image.getWidth() - 1;
+		int lineCounter = 0;
+		for (int w = rightLine; w > leftLine; w--)
+		{
+			int pixelCounter = 0;
+			for (int h = 0; h < image.getHeight() ; h++)
+			{
+				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
+					pixelCounter++;
+				}
+			}
+			if(pixelCounter > (dieSizeThr * dieSize[0])){
+				lineCounter++;
+			} else{
+				lineCounter = 0;
+			}
+
+			if(lineCounter == dieDistanceTolerance ){
+				rightLine = w + dieDistanceTolerance  + 1;
+				break;
+			}
+		}
+		return rightLine;
+	}
 
 
 }

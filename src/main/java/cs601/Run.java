@@ -95,45 +95,11 @@ public class Run {
 		{
 			LOG.info("Die size is :" + dieSize[i]);
 		}
-		// th, tolerance are Die size parameters
-		float dieSizeThr = Float.parseFloat(ConfigManager.getConfig().getDieSizeThr());
-		Integer dieDistanceTolerance = Integer.parseInt(ConfigManager.getConfig().getDieDistanceTolerance());
-
-		/* ----------find top---------- */
 
 		int startLine = scnImg.findTopDiode(image, dieSize);
-
-		/* ---------- find bottom ---------- */
-
 		int endLine = scnImg.findBottomDiode(image, dieSize, startLine);
-
-		/* ----------find left---------- */
-
-		int leftLine = scnImg.finfLeftDiode(image, dieSize);
-
-		/* ----------find right----------*/
-		int rightLine = image.getWidth() - 1;
-		int lineCounter = 0;
-		for (int w = rightLine; w > leftLine; w--)
-		{
-			int pixelCounter = 0;
-			for (int h = 0; h < image.getHeight() ; h++)
-			{
-				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
-					pixelCounter++;
-				}
-			}
-			if(pixelCounter > (dieSizeThr * dieSize[0])){
-				lineCounter++;
-			} else{
-				lineCounter = 0;
-			}
-
-			if(lineCounter == dieDistanceTolerance ){
-				rightLine = w + dieDistanceTolerance  + 1;
-				break;
-			}
-		}
+		int leftLine = scnImg.findLeftDiode(image, dieSize);
+		int rightLine = scnImg.findRightDiode(image, dieSize, leftLine);
 
 		leftLine = leftLine - dieSize[0];
 		rightLine = rightLine + dieSize[0];
@@ -359,6 +325,8 @@ public class Run {
 		System.out.println("Done!");
 
 	}
+
+
 
 
 

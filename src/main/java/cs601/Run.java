@@ -58,7 +58,8 @@ public class Run {
 		String imageName = imageFile.getName(); 
 		int[] state = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
 		ImageProcessingTools imageTool = new ImageProcessingTools();
-
+		Filter filter = new Filter();
+		Service srv = new Service();
 		// get rid of .jpg
 		if(imageName.indexOf(".") > 0) {
 			imageName = imageName.substring(0, imageName.lastIndexOf(".") );
@@ -115,21 +116,13 @@ public class Run {
 		height = endLine - startLine + 1;
 
 		/* ----------crop image----------*/
-		BufferedImage imgOriginal = image;
-		image = map(width, height);
-		for (int w = leftLine; w <= rightLine; w++)
-		{
-			for (int h = startLine; h < endLine; h++)
-			{
-				image.setRGB(w - leftLine, h - startLine, imgOriginal.getRGB(w, h));
-			}
-		}
-		savePNG(image, prefix+"_Crop.png");
+		
+		image = filter.cropFilter(image, prefix, height, width, startLine, endLine, leftLine, rightLine);
 
 		/* ----------To calculate and print Die size----------*/ 	
 
 		BufferedImage pattern = getPattern(dieSize);
-		savePNG(pattern, prefix+"_Pattern.png");
+		srv.savePNG(pattern, prefix+"_Pattern.png");
 		float thr1 = 0.3f; //Pattern similarity percentage for upper part of image
 		float thr2 = 0.3f; //Pattern similarity percentage for down part of image
 		float thrL = 0.3f;
@@ -336,6 +329,7 @@ public class Run {
 
 
 
+
 	private static boolean[] findLeft(BufferedImage img, BufferedImage pattern, int x, int y, float thrL){
 		boolean[] res = new boolean[100];
 		int index = 100 - 1;
@@ -422,12 +416,13 @@ public class Run {
 
 	static int cacheCounter = 0;
 	private static float getSimilarity(BufferedImage img, int x, int y, BufferedImage pattern){
+		Service srv = new Service();
 		float diff = 0;
 
 		int width = pattern.getWidth();
 		int height = pattern.getHeight();
 
-		BufferedImage cache = map(width, height);
+		BufferedImage cache = srv.map(width, height);
 
 		int counter = 0;
 
@@ -448,7 +443,8 @@ public class Run {
 
 
 	private static BufferedImage getPattern(int[] size){
-		BufferedImage res = map(size[0], size[1]);
+		Service srv = new Service();
+		BufferedImage res = srv.map(size[0], size[1]);
 		for(int i = 0; i < size[0]; i++){
 			for(int j = 0; j < size[1]; j++){
 				if(i == 0 || i == size[0] - 1 || j == 0 || j == size[1] - 1){
@@ -462,24 +458,7 @@ public class Run {
 	}
 
 
-	private static void savePNG( final BufferedImage bi, final String path ){
-		try {
-			RenderedImage rendImage = bi;
-			ImageIO.write(rendImage, "png", new File(path));
-		} catch ( IOException e) {
-			e.printStackTrace();
-		}
-	}
 
-	private static BufferedImage map( int sizeX, int sizeY ){
-		final BufferedImage res = new BufferedImage( sizeX, sizeY, BufferedImage.TYPE_INT_RGB );
-		for (int x = 0; x < sizeX; x++){
-			for (int y = 0; y < sizeY; y++){
-				res.setRGB(x, y, Color.WHITE.getRGB() );
-			}
-		}
-		return res;
-	}
 
 	private static int[] calcSize(BufferedImage img, int left, int right, int top, int bottom){
 		ImageProcessingTools imageTool = new ImageProcessingTools();

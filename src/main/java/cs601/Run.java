@@ -23,14 +23,20 @@ import org.apache.logging.log4j.Logger;
 public class Run {
 	private static Logger LOG = LogManager.getLogger(Run.class);
 	private static File cacheFolder = null;
+	private static Integer hStep;
+	private static Integer wStep;
 
 	public static void main(String[] args) {
 		
-		ConfigManager.getConfig().getInput();
 		Service srv = new Service();
+		
+		
 		LOG.info("Convesion is started ..." + Run.class.getName());
 		File folder = new File(ConfigManager.getConfig().getInput());//Read the waferIMG file
+		hStep = Integer.parseInt(ConfigManager.getConfig().getHStep());
+		wStep = Integer.parseInt(ConfigManager.getConfig().getWStep());
 		cacheFolder = new File(folder.getParent(), "cache");
+		
 		// create cache file
 		srv.createCache(cacheFolder);
 
@@ -45,25 +51,19 @@ public class Run {
 		// Delet processed files
 		File[] imgsProcessed  = folder.listFiles();
 		for(int i1 = 0 ; i1 < imgsProcessed.length ; i1++) {
-			if(imgsProcessed[i1].getName().toLowerCase().contains("crop") || imgsProcessed[i1].getName().toLowerCase().contains("patterns")) {
-				imgsProcessed[i1].delete();
+			if(imgsProcessed[i1].getName().toLowerCase().contains("crop") || imgsProcessed[i1].getName().toLowerCase().contains("pattern")) {				imgsProcessed[i1].delete();
 			}
 		}
 		LOG.info("Conversion Process was completed!!");
 	}
 
-
-
-
-
-
-
-
-
 	private static void convert(File imageFile) {
 		BufferedImage image = null;
 		String prefix = imageFile.getAbsolutePath();
 		String imageName = imageFile.getName(); 
+		int[] state = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
+		ImageProcessingTools imageTool = new ImageProcessingTools();
+
 		// get rid of .jpg
 		if(imageName.indexOf(".") > 0) {
 			imageName = imageName.substring(0, imageName.lastIndexOf(".") );
@@ -75,44 +75,19 @@ public class Run {
 			LOG.error("FATAL: Failed in processing image: " + imageFile.getAbsolutePath());
 			return;
 		}
-
+		
 		int height = image.getHeight();
 		int width = image.getWidth();
-		int hStep = 1;
-		int wStep = 1;
-		int rgb;
 		LOG.info("Image Height and Width is: " + height + " x " + width);
 
-		int[] stat = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
-		int[] statR = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
-		int[] statG = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
-		int[] statB = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
-
-		/* ---------- Calculate  Black/White Threshold ---------- */
-		for (int h = 1; h < height; h += hStep)
-		{
-			for (int w = 1; w < width; w += wStep)
-			{
-				rgb = image.getRGB(w, h);
-				//mask rgb and separate the index
-				Integer redIndex = Integer.parseInt(ConfigManager.getConfig().getRedIndex());
-				Integer greenIndex = Integer.parseInt(ConfigManager.getConfig().getGreenIndex());
-				int red = (rgb >> redIndex) & 0xFF;
-				int green = (rgb >> greenIndex) & 0xFF;
-				int blue = (rgb & 0xFF);
-
-				statR[red]++;
-				statG[green]++;
-				statB[blue]++;
-
-				stat[makeRGB(rgb)]++;
-			}
-		}
+		int rgb;
+		state = imageTool.createBlackWhite(image, height, width, hStep, wStep, state);
+		
 		// find maximum index of state
 		int max = 0;
 		int maxLimit = Integer.parseInt(ConfigManager.getConfig().getGrayScale());
 		for(int i = 0; i < maxLimit; i++){
-			if(stat[i] > stat[max])
+			if(state[i] > state[max])
 				max = i;
 		}
 
@@ -124,12 +99,12 @@ public class Run {
 				rgb = image.getRGB(w, h);
 				int blue = (rgb & 0xFF);
 
-				rgb = makeRGB(rgb);
+				rgb = imageTool.makeRGB(rgb);
 
 				for(int x = 0; x < wStep && w+x < width; x++){
 					for(int y = 0; y < hStep && h+y < height; y++){
 						int value = image.getRGB(w+x, h+y);
-						rgb += makeRGB(value);
+						rgb += imageTool.makeRGB(value);
 					}
 				}
 				rgb /= (wStep * wStep);
@@ -162,7 +137,7 @@ public class Run {
 			int pixelCounter = 0;
 			for (int w = 1; w < image.getWidth(); w++)
 			{
-				if(makeRGB(image.getRGB(w, h)) == 0){
+				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
 					pixelCounter++;
 				}
 			}
@@ -187,7 +162,7 @@ public class Run {
 			int pixelCounter = 0;
 			for (int w = 1; w < image.getWidth(); w++)
 			{
-				if(makeRGB(image.getRGB(w, h)) == 0){
+				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
 					pixelCounter++;
 				}
 			}
@@ -212,7 +187,7 @@ public class Run {
 			int pixelCounter = 0;
 			for (int h = 0; h < image.getHeight() ; h++)
 			{
-				if(makeRGB(image.getRGB(w, h)) == 0){
+				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
 					pixelCounter++;
 				}
 			}
@@ -236,7 +211,7 @@ public class Run {
 			int pixelCounter = 0;
 			for (int h = 0; h < image.getHeight() ; h++)
 			{
-				if(makeRGB(image.getRGB(w, h)) == 0){
+				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
 					pixelCounter++;
 				}
 			}
@@ -444,7 +419,7 @@ public class Run {
 		}
 		
 		try {
-			int lineNum = 1;
+			
 			File mapFile = new File(ConfigManager.getConfig().getOutput(), imageName +".txt");
 			BufferedWriter output;
 			output = new BufferedWriter(new FileWriter(mapFile));
@@ -460,7 +435,7 @@ public class Run {
 			output.write("WAFDIA 8\r\n");
 			output.write("XDIES1 0.500000\r\n");
 			output.write("YDIES1 0.500000\r\n");
-
+			int lineNum = 1;
 			for(int i = iStart; i <= iEnd; i++, lineNum++){
 				//output.write("MAP"+String.format("%03d", lineNum) +" ");
 				for(int j = jStart; j <= jEnd; j++){
@@ -476,6 +451,8 @@ public class Run {
 		System.out.println("Done!");
 
 	}
+
+
 	
 	
 	private static boolean[] findLeft(BufferedImage img, BufferedImage pattern, int x, int y, float thrL){
@@ -626,7 +603,7 @@ public class Run {
 	}
 
 	private static int[] calcSize(BufferedImage img, int left, int right, int top, int bottom){
-
+		ImageProcessingTools imageTool = new ImageProcessingTools();
 		int dieHeight = 0;
 		int spaceHeight = 0;
 		int dieWidth = 0;
@@ -642,7 +619,7 @@ public class Run {
 		{
 			for (int h = top; h <= bottom; h++)
 			{
-				if(makeRGB(img.getRGB(w, h)) == 0){
+				if(imageTool.makeRGB(img.getRGB(w, h)) == 0){
 					if(counterSpace != 0 && counterSpace < 100){
 						space[counterSpace] = space[counterSpace] + 1;
 					}
@@ -675,7 +652,7 @@ public class Run {
 		{
 			for (int w = left; w <= right; w++)
 			{
-				if(makeRGB(img.getRGB(w, h)) == 0){
+				if(imageTool.makeRGB(img.getRGB(w, h)) == 0){
 					if(counterSpace != 0 && counterSpace < 100){
 						space[counterSpace] = space[counterSpace] + 1;
 					}
@@ -707,22 +684,5 @@ public class Run {
 		res[0] = dieWidth + spaceWidth;
 		res[1] = dieHeight + spaceHeight;
 		return res;
-	}
-
-	/**
-	 * makeRGB
-	 * Generate RGB from r, g, b index
-	 *
-	 *@param rgb
-	 *@return RGB
-	 */
-	private static int makeRGB(int rgb) {
-		int result = 0;
-		float r = (rgb >> 16) & 0xFF;
-		float g = (rgb >> 8) & 0xFF;
-		float b = (rgb & 0xFF);
-		//convert the pixel to black and white
-		result = (int)(r*0.299 + g*0.587 + b*0.114);
-		return result;
 	}
 }

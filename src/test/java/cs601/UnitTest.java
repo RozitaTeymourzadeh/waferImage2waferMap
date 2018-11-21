@@ -92,4 +92,16 @@ public class UnitTest {
 		Assert.assertEquals(5, Integer.parseInt(dieDistanceTolerance));
 	}
 	
+	@Test
+	public void testHStep() throws IOException {
+		String hStep = ConfigManager.getConfig().getHStep();
+		Assert.assertEquals(1, Integer.parseInt(hStep));
+	}
+	
+	@Test
+	public void testWStep() throws IOException {
+		String wStep = ConfigManager.getConfig().getWStep();
+		Assert.assertEquals(1, Integer.parseInt(wStep));
+	}
+	
 }

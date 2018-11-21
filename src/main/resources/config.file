@@ -8,3 +8,7 @@ dieSizeThr=1.5f
 dieDistanceTolerance=5
 hStep=1
 wStep=1
+thrUp=0.3f
+thrDown=0.3f
+thrLeft=0.3f
+thrRight=0.3f

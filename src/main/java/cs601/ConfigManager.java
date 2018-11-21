@@ -204,5 +204,68 @@ public class ConfigManager {
 		}
 		return result;
 	}	
+	
+	/**
+	 * 
+	 * Pattern Similarity Percentage for upper part of image
+	 * 0.3f
+	 * 
+	 */
+	public String getThrUp() {
+		String result = "";
+		if(prop.get("thrUp") != null) {
+			result = prop.get("thrUp").toString();
+		}else {
+			System.out.println("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}
 
+	/**
+	 * 
+	 * Pattern Similarity Percentage for down part of image 
+	 * 0.3f
+	 * 
+	 */
+	public String getThrDown() {
+		String result = "";
+		if(prop.get("thrDown") != null) {
+			result = prop.get("thrDown").toString();
+		}else {
+			System.out.println("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}
+	
+	/**
+	 * 
+	 * Pattern Similarity Percentage for left part of image 
+	 * 0.3f
+	 * 
+	 */
+	public String getThrLeft() {
+		String result = "";
+		if(prop.get("thrLeft") != null) {
+			result = prop.get("thrLeft").toString();
+		}else {
+			System.out.println("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}
+	
+	/**
+	 * 
+	 * Pattern Similarity Percentage for left part of image 
+	 * 0.3f
+	 * 
+	 */
+	public String getThrRight() {
+		String result = "";
+		if(prop.get("thrRight") != null) {
+			result = prop.get("thrRight").toString();
+		}else {
+			System.out.println("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}
 }

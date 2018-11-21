@@ -10,9 +10,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,19 +25,16 @@ public class Run {
 	private static Integer wStep;
 
 	public static void main(String[] args) {
-		
+
 		Service srv = new Service();
-		
-		
 		LOG.info("Convesion is started ..." + Run.class.getName());
 		File folder = new File(ConfigManager.getConfig().getInput());//Read the waferIMG file
 		hStep = Integer.parseInt(ConfigManager.getConfig().getHStep());
 		wStep = Integer.parseInt(ConfigManager.getConfig().getWStep());
 		cacheFolder = new File(folder.getParent(), "cache");
-		
+
 		// create cache file
 		srv.createCache(cacheFolder);
-
 		// read file
 		File[] imgs = folder.listFiles();
 		for(int i = 0; i < imgs.length; i++){
@@ -75,14 +70,15 @@ public class Run {
 			LOG.error("FATAL: Failed in processing image: " + imageFile.getAbsolutePath());
 			return;
 		}
-		
+
 		int height = image.getHeight();
 		int width = image.getWidth();
 		LOG.info("Image Height and Width is: " + height + " x " + width);
 
 		int rgb;
-		state = imageTool.createBlackWhite(image, height, width, hStep, wStep, state);
-		
+		// Convert Image to black and white image
+		state = imageTool.createBlackWhite(image, height, width);
+
 		// find maximum index of state
 		int max = 0;
 		int maxLimit = Integer.parseInt(ConfigManager.getConfig().getGrayScale());
@@ -92,42 +88,17 @@ public class Run {
 		}
 
 		/*  ---------- Normalize RGB to Black and White ---------- */
-		for (int h = 1; h < height; h+=hStep)
-		{
-			for (int w = 1; w<width; w+=wStep)
-			{
-				rgb = image.getRGB(w, h);
-				int blue = (rgb & 0xFF);
-
-				rgb = imageTool.makeRGB(rgb);
-
-				for(int x = 0; x < wStep && w+x < width; x++){
-					for(int y = 0; y < hStep && h+y < height; y++){
-						int value = image.getRGB(w+x, h+y);
-						rgb += imageTool.makeRGB(value);
-					}
-				}
-				rgb /= (wStep * wStep);
-				// blue as blue component to detect b/w cropped image
-				Integer blackWhiteThr = Integer.parseInt(ConfigManager.getConfig().getBlackWhiteThr());
-				if(blue < blackWhiteThr){
-					rgb = 0;
-				} else {
-					rgb = 0xFFFFFF;
-				}
-				image.setRGB(w / wStep, h / hStep, rgb);
-			}
-		}
+		image = imageTool.normalizedBlackWhite(image, height, width);
 
 		int[] dieSize = calcSize(image, 0, image.getWidth() - 1, 0, image.getHeight() - 1);
 		for(int i = 0; i<2; i++)
 		{
-		    LOG.info("Die size is :" + dieSize[i]);
+			LOG.info("Die size is :" + dieSize[i]);
 		}
 		// th, tolerance are Die size parameters
 		float dieSizeThr = Float.parseFloat(ConfigManager.getConfig().getDieSizeThr());
 		Integer dieDistanceTolerance = Integer.parseInt(ConfigManager.getConfig().getDieDistanceTolerance());
-//		int tolerance = dieDistanceTolerance;// defined distance btw 2 dies, 
+		//		int tolerance = dieDistanceTolerance;// defined distance btw 2 dies, 
 
 		/* ----------find top---------- */
 		int startLine = 0;
@@ -152,7 +123,7 @@ public class Run {
 				break;
 			}
 		}
-		
+
 		/* ---------- find bottom ---------- */
 
 		int endLine = image.getHeight() - 1;
@@ -226,7 +197,7 @@ public class Run {
 				break;
 			}
 		}
-		
+
 		leftLine = leftLine - dieSize[0];
 		rightLine = rightLine + dieSize[0];
 		startLine = startLine - dieSize[1];
@@ -239,7 +210,7 @@ public class Run {
 
 		width = rightLine - leftLine + 1;
 		height = endLine - startLine + 1;
-		
+
 		/* ----------crop image----------*/
 		BufferedImage imgOriginal = image;
 		image = map(width, height);
@@ -251,7 +222,7 @@ public class Run {
 			}
 		}
 		savePNG(image, prefix+"_Crop.png");
-		
+
 		/* ----------To calculate and print Die size----------*/ 	
 
 		BufferedImage pattern = getPattern(dieSize);
@@ -304,7 +275,7 @@ public class Run {
 					sim[i+1][j+1] = getSimilarity(image, x+i, y+j, pattern);
 				}	
 			}
-			
+
 			int xTemp = 1;
 			int yTemp = 1;
 
@@ -379,7 +350,7 @@ public class Run {
 			}
 
 		}
-		
+
 		int iStart = 0;
 		int iEnd = 300 - 1;
 		int jStart = 0;
@@ -417,9 +388,9 @@ public class Run {
 				}
 			}
 		}
-		
+
 		try {
-			
+
 			File mapFile = new File(ConfigManager.getConfig().getOutput(), imageName +".txt");
 			BufferedWriter output;
 			output = new BufferedWriter(new FileWriter(mapFile));
@@ -453,8 +424,10 @@ public class Run {
 	}
 
 
-	
-	
+
+
+
+
 	private static boolean[] findLeft(BufferedImage img, BufferedImage pattern, int x, int y, float thrL){
 		boolean[] res = new boolean[100];
 		int index = 100 - 1;
@@ -614,7 +587,7 @@ public class Run {
 
 		int counterDie = 0;
 		int counterSpace = 0;
-		
+
 		for (int w = left; w <= right; w++)
 		{
 			for (int h = top; h <= bottom; h++)

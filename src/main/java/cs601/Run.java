@@ -25,12 +25,10 @@ public class Run {
 	public static void main(String[] args) {
 
 		Service srv = new Service();
-
-		LOG.info("Convesion is started ..." + Run.class.getName());
 		File folder = new File(ConfigManager.getConfig().getInput());//Read the waferIMG file
-//		int hStep = Integer.parseInt(ConfigManager.getConfig().getHStep());
-//		int wStep = Integer.parseInt(ConfigManager.getConfig().getWStep());
 		cacheFolder = new File(folder.getParent(), "cache");
+		LOG.info("Convesion is started ..." + Run.class.getName());
+
 
 		// create cache file
 		srv.createCache(cacheFolder);
@@ -54,6 +52,9 @@ public class Run {
 	private static void convert(File imageFile) {
 		BufferedImage image = null;
 		ScanImage scnImg = new ScanImage();
+		Service srv = new Service();
+		DiodeAnalysis diodeAnalysis = new DiodeAnalysis();
+		Filter filter = new Filter();
 		String prefix = imageFile.getAbsolutePath();
 		String imageName = imageFile.getName(); 
 		int[] state = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
@@ -90,80 +91,36 @@ public class Run {
 		/*  ---------- Normalize RGB to Black and White ---------- */
 		image = imageTool.normalizedBlackWhite(image, height, width);
 
-		int[] dieSize = calcSize(image, 0, image.getWidth() - 1, 0, image.getHeight() - 1);
+		int[] dieSize = diodeAnalysis.calcSize(image, 0, image.getWidth() - 1, 0, image.getHeight() - 1);
 		for(int i = 0; i<2; i++)
 		{
 			LOG.info("Die size is :" + dieSize[i]);
 		}
-		// th, tolerance are Die size parameters
-		float dieSizeThr = Float.parseFloat(ConfigManager.getConfig().getDieSizeThr());
-		Integer dieDistanceTolerance = Integer.parseInt(ConfigManager.getConfig().getDieDistanceTolerance());
-
-		/* ----------find top---------- */
 
 		int startLine = scnImg.findTopDiode(image, dieSize);
-
-		/* ---------- find bottom ---------- */
-
 		int endLine = scnImg.findBottomDiode(image, dieSize, startLine);
-
-		/* ----------find left---------- */
-
-		int leftLine = scnImg.finfLeftDiode(image, dieSize);
-
-		/* ----------find right----------*/
-		int rightLine = image.getWidth() - 1;
-		int lineCounter = 0;
-		for (int w = rightLine; w > leftLine; w--)
-		{
-			int pixelCounter = 0;
-			for (int h = 0; h < image.getHeight() ; h++)
-			{
-				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
-					pixelCounter++;
-				}
-			}
-			if(pixelCounter > (dieSizeThr * dieSize[0])){
-				lineCounter++;
-			} else{
-				lineCounter = 0;
-			}
-
-			if(lineCounter == dieDistanceTolerance ){
-				rightLine = w + dieDistanceTolerance  + 1;
-				break;
-			}
-		}
-
+		int leftLine = scnImg.findLeftDiode(image, dieSize);
+		int rightLine = scnImg.findRightDiode(image, dieSize, leftLine);
+		
+		
 		leftLine = leftLine - dieSize[0];
 		rightLine = rightLine + dieSize[0];
 		startLine = startLine - dieSize[1];
 		endLine = endLine + dieSize[1];
-
 		leftLine = leftLine >=0 ? leftLine : 0;
 		rightLine = rightLine < image.getWidth() ? rightLine : image.getWidth() - 1;
 		startLine = startLine >=0 ? startLine : 0;
 		endLine = endLine < image.getHeight() ? endLine : image.getHeight() - 1;
-
 		width = rightLine - leftLine + 1;
 		height = endLine - startLine + 1;
 
-		/* ----------crop image----------*/
-		BufferedImage imgOriginal = image;
-		image = map(width, height);
-		for (int w = leftLine; w <= rightLine; w++)
-		{
-			for (int h = startLine; h < endLine; h++)
-			{
-				image.setRGB(w - leftLine, h - startLine, imgOriginal.getRGB(w, h));
-			}
-		}
-		savePNG(image, prefix+"_Crop.png");
+		filter.cropFilter(image, prefix, startLine, endLine, leftLine, rightLine, width, height);
 
 		/* ----------To calculate and print Die size----------*/ 	
 
-		BufferedImage pattern = getPattern(dieSize);
-		savePNG(pattern, prefix+"_Pattern.png");
+		BufferedImage pattern = diodeAnalysis.getPattern(dieSize);
+		FindPattern findPattern = new FindPattern();
+		srv.savePNG(pattern, prefix+"_Pattern.png");
 		float thr1 = 0.3f; //Pattern similarity percentage for upper part of image
 		float thr2 = 0.3f; //Pattern similarity percentage for down part of image
 		float thrL = 0.3f;
@@ -184,7 +141,7 @@ public class Run {
 
 		for(int i = 0; i < pattern.getWidth(); i++){
 			for(int j = 0; j < pattern.getHeight(); j++){
-				sim[i][j] = getSimilarity(image, x+i, y+j, pattern);
+				sim[i][j] = findPattern.getSimilarity(image, x+i, y+j, pattern);
 			}
 		}
 		int x0 = 0;
@@ -209,7 +166,7 @@ public class Run {
 
 			for(int i = -1; i <= 1; i++){
 				for(int j = -1; j <= 1; j++){
-					sim[i+1][j+1] = getSimilarity(image, x+i, y+j, pattern);
+					sim[i+1][j+1] = findPattern.getSimilarity(image, x+i, y+j, pattern);
 				}	
 			}
 
@@ -232,8 +189,8 @@ public class Run {
 			} else {
 			}
 
-			boolean[] left = findLeft(image, pattern, x, y,thrL);
-			boolean[] right = findRight(image, pattern, x, y, thrR);
+			boolean[] left = findPattern.findLeft(image, pattern, x, y,thrL);
+			boolean[] right = findPattern.findRight(image, pattern, x, y, thrR);
 			for(int i = 100 - 1, j = 150; i >= 0; i--, j--)
 			{
 				waferMap[index][j] = left[i];
@@ -253,7 +210,7 @@ public class Run {
 
 			for(int i = -1; i <= 1; i++){
 				for(int j = -1; j <= 1; j++){
-					sim[i+1][j+1] = getSimilarity(image, x+i, y+j, pattern);
+					sim[i+1][j+1] = findPattern.getSimilarity(image, x+i, y+j, pattern);
 				}	
 			}
 
@@ -275,8 +232,8 @@ public class Run {
 			} else {
 			}
 
-			boolean[] right = findRight(image, pattern, x, y, thrR);
-			boolean[] left = findLeft(image, pattern, x, y, thrL);
+			boolean[] right = findPattern.findRight(image, pattern, x, y, thrR);
+			boolean[] left = findPattern.findLeft(image, pattern, x, y, thrL);
 			for(int i = 100 - 1, j = 150; i >= 0; i--, j--)
 			{
 				waferMap[index][j] = left[i];
@@ -364,236 +321,7 @@ public class Run {
 
 
 
+//	static int cacheCounter = 0;
 
 
-
-
-	private static boolean[] findLeft(BufferedImage img, BufferedImage pattern, int x, int y, float thrL){
-		boolean[] res = new boolean[100];
-		int index = 100 - 1;
-		for( ; index >= 0 && x >= 1; x -= pattern.getWidth(), index--){
-			float[][] sim = new float[3][3];
-
-			for(int i = -1; i <= 1; i++){
-				for(int j = -1; j <= 1; j++){
-					sim[i+1][j+1] = getSimilarity(img, x+i, y+j, pattern);
-				}	
-			}
-
-			int xTemp = 1;
-			int yTemp = 1;
-
-			for(int i = 0; i < 3; i++){
-				for(int j = 0; j < 3; j++){
-					if(sim[i][j] > sim[xTemp][yTemp]){
-						xTemp = i;
-						yTemp = j;
-					}
-				}	
-			}
-
-			if(sim[xTemp][yTemp] > thrL){
-				res[index] = true;
-				y += yTemp - 1;
-				x += xTemp - 1;
-			} else {
-				res[index] = false;
-			}
-		}
-
-		for(; index >= 0; index--){
-			res[index] = false;
-		}
-
-		return res;
-	}
-
-
-
-
-	private static boolean[] findRight(BufferedImage img, BufferedImage pattern, int x, int y, float thrR){
-		boolean[] res = new boolean[100];
-		int index = 0;
-		for( ; index < 100 && x < img.getWidth() - pattern.getWidth() - 1; x += pattern.getWidth(), index++){
-			float[][] sim = new float[3][3];
-
-			for(int i = -1; i <= 1; i++){
-				for(int j = -1; j <= 1; j++){
-					sim[i+1][j+1] = getSimilarity(img, x+i, y+j, pattern);
-				}	
-			}
-
-			int xTemp = 1;
-			int yTemp = 1;
-
-			for(int i = 0; i < 3; i++){
-				for(int j = 0; j < 3; j++){
-					if(sim[i][j] > sim[xTemp][yTemp]){
-						xTemp = i;
-						yTemp = j;
-					}
-				}
-			}
-
-			if(sim[xTemp][yTemp] > thrR){
-				res[index] = true;
-				y += yTemp - 1;
-				x += xTemp - 1;
-			} else {
-				res[index] = false;
-			}
-		}
-
-		for(; index < 100; index++){
-			res[index] = false;
-		}
-
-		return res;
-	}
-
-
-	static int cacheCounter = 0;
-	private static float getSimilarity(BufferedImage img, int x, int y, BufferedImage pattern){
-		float diff = 0;
-
-		int width = pattern.getWidth();
-		int height = pattern.getHeight();
-
-		BufferedImage cache = map(width, height);
-
-		int counter = 0;
-
-		float diameter = (float) Math.sqrt((width*width + height*height)) / 2;
-		for(int i = 0; i < width; i++){
-			for(int j = 0; j < height; j++){
-				counter++;
-				if((x+i) >= img.getWidth() || (y+j) >= img.getHeight() || img.getRGB(x+i, y+j) != pattern.getRGB(i, j)){
-					diff += (float) Math.sqrt((width/2 - i)*(width/2 - i) + (height/2 - j)*(height/2 - j)) / diameter;
-				} else{
-				}
-			}
-		}
-
-		float res = 1 - diff / counter;//(width * height);
-		return res*res*res*res;
-	}
-
-
-	private static BufferedImage getPattern(int[] size){
-		BufferedImage res = map(size[0], size[1]);
-		for(int i = 0; i < size[0]; i++){
-			for(int j = 0; j < size[1]; j++){
-				if(i == 0 || i == size[0] - 1 || j == 0 || j == size[1] - 1){
-					res.setRGB(i, j, 0xFFFFFF);
-				} else {
-					res.setRGB(i, j, 0);
-				}
-			}
-		}
-		return res;
-	}
-
-
-	private static void savePNG( final BufferedImage bi, final String path ){
-		try {
-			RenderedImage rendImage = bi;
-			ImageIO.write(rendImage, "png", new File(path));
-		} catch ( IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static BufferedImage map( int sizeX, int sizeY ){
-		final BufferedImage res = new BufferedImage( sizeX, sizeY, BufferedImage.TYPE_INT_RGB );
-		for (int x = 0; x < sizeX; x++){
-			for (int y = 0; y < sizeY; y++){
-				res.setRGB(x, y, Color.WHITE.getRGB() );
-			}
-		}
-		return res;
-	}
-
-	private static int[] calcSize(BufferedImage img, int left, int right, int top, int bottom){
-		ImageProcessingTools imageTool = new ImageProcessingTools();
-		int dieHeight = 0;
-		int spaceHeight = 0;
-		int dieWidth = 0;
-		int spaceWidth = 0;
-
-		int[] die = new int[100];
-		int[] space = new int[100];
-
-		int counterDie = 0;
-		int counterSpace = 0;
-
-		for (int w = left; w <= right; w++)
-		{
-			for (int h = top; h <= bottom; h++)
-			{
-				if(imageTool.makeRGB(img.getRGB(w, h)) == 0){
-					if(counterSpace != 0 && counterSpace < 100){
-						space[counterSpace] = space[counterSpace] + 1;
-					}
-					counterSpace = 0;
-					counterDie++;
-				}else {
-					if(counterDie != 0 && counterDie < 100){
-						die[counterDie] = die[counterDie] + 1;
-					}
-					counterSpace++;
-					counterDie = 0;
-				}
-			}
-			counterDie = 0;
-			counterSpace = 0;
-		}
-		for(int i = 0; i < 100; i++){
-			if(die[i] > die[dieHeight]){
-				dieHeight = i;
-			}
-			if(space[i] > space[spaceHeight]){
-				spaceHeight = i;
-			}
-		}
-
-
-		counterDie = 0;
-		counterSpace = 0;
-		for (int h = top; h <= bottom; h++)
-		{
-			for (int w = left; w <= right; w++)
-			{
-				if(imageTool.makeRGB(img.getRGB(w, h)) == 0){
-					if(counterSpace != 0 && counterSpace < 100){
-						space[counterSpace] = space[counterSpace] + 1;
-					}
-					counterSpace = 0;
-					counterDie++;
-				}else {
-					if(counterDie != 0 && counterDie < 100){
-						die[counterDie] = die[counterDie] + 1;
-					}
-					counterSpace++;
-					counterDie = 0;
-				}
-			}
-			counterDie = 0;
-			counterSpace = 0;
-		}
-
-		for(int i = 0; i < 100; i++){
-			if(die[i] > die[dieWidth]){
-				dieWidth = i;
-			}
-			if(space[i] > space[spaceWidth]){
-				spaceWidth = i;
-			}
-		}
-
-		int[] res = new int[2];
-
-		res[0] = dieWidth + spaceWidth;
-		res[1] = dieHeight + spaceHeight;
-		return res;
-	}
 }

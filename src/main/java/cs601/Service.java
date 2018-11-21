@@ -57,13 +57,13 @@ public class Service {
 	 * @return Buffered Image
 	 */	
 	public BufferedImage map(int sizeX, int sizeY){
-		final BufferedImage imageResult = new BufferedImage( sizeX, sizeY, BufferedImage.TYPE_INT_RGB );
+		final BufferedImage res = new BufferedImage( sizeX, sizeY, BufferedImage.TYPE_INT_RGB );
 		for (int x = 0; x < sizeX; x++){
 			for (int y = 0; y < sizeY; y++){
-				imageResult.setRGB(x, y, Color.WHITE.getRGB() );
+				res.setRGB(x, y, Color.WHITE.getRGB() );
 			}
 		}
-		return imageResult;
+		return res;
 	}
 
 }

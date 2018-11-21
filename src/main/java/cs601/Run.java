@@ -121,10 +121,8 @@ public class Run {
 		BufferedImage pattern = diodeAnalysis.getPattern(dieSize);
 		FindPattern findPattern = new FindPattern();
 		srv.savePNG(pattern, prefix+"_Pattern.png");
-		float thr1 = 0.3f; //Pattern similarity percentage for upper part of image
-		float thr2 = 0.3f; //Pattern similarity percentage for down part of image
-		float thrL = 0.3f;
-		float thrR = 0.3f;
+		float thrUp = Float.parseFloat(ConfigManager.getConfig().getThrUp());
+		float thrDown = Float.parseFloat(ConfigManager.getConfig().getThrDown());
 
 		boolean[][] waferMap = new boolean[300][300];
 
@@ -183,14 +181,14 @@ public class Run {
 			}
 
 
-			if(sim[xTemp][yTemp] > thr1){
+			if(sim[xTemp][yTemp] > thrUp){
 				y += yTemp - 1;
 				x += xTemp - 1;
 			} else {
 			}
 
-			boolean[] left = findPattern.findLeft(image, pattern, x, y,thrL);
-			boolean[] right = findPattern.findRight(image, pattern, x, y, thrR);
+			boolean[] left = findPattern.findLeft(image, pattern, x, y);
+			boolean[] right = findPattern.findRight(image, pattern, x, y);
 			for(int i = 100 - 1, j = 150; i >= 0; i--, j--)
 			{
 				waferMap[index][j] = left[i];
@@ -226,14 +224,14 @@ public class Run {
 				}	
 			}
 
-			if(sim[xTemp][yTemp] > thr2){
+			if(sim[xTemp][yTemp] > thrDown){
 				y += yTemp - 1;
 				x += xTemp - 1;
 			} else {
 			}
 
-			boolean[] right = findPattern.findRight(image, pattern, x, y, thrR);
-			boolean[] left = findPattern.findLeft(image, pattern, x, y, thrL);
+			boolean[] right = findPattern.findRight(image, pattern, x, y);
+			boolean[] left = findPattern.findLeft(image, pattern, x, y);
 			for(int i = 100 - 1, j = 150; i >= 0; i--, j--)
 			{
 				waferMap[index][j] = left[i];

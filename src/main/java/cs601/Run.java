@@ -139,6 +139,7 @@ public class Run {
 
 		for(int i = 0; i < pattern.getWidth(); i++){
 			for(int j = 0; j < pattern.getHeight(); j++){
+				int cacheCounter = 0;
 				sim[i][j] = findPattern.getSimilarity(image, x+i, y+j, pattern);
 			}
 		}
@@ -164,6 +165,7 @@ public class Run {
 
 			for(int i = -1; i <= 1; i++){
 				for(int j = -1; j <= 1; j++){
+					int cacheCounter = 0;
 					sim[i+1][j+1] = findPattern.getSimilarity(image, x+i, y+j, pattern);
 				}	
 			}
@@ -208,6 +210,7 @@ public class Run {
 
 			for(int i = -1; i <= 1; i++){
 				for(int j = -1; j <= 1; j++){
+					int cacheCounter = 0;
 					sim[i+1][j+1] = findPattern.getSimilarity(image, x+i, y+j, pattern);
 				}	
 			}
@@ -316,10 +319,6 @@ public class Run {
 	}
 
 
-
-
-
-//	static int cacheCounter = 0;
-
+	static int cacheCounter = 0;
 
 }

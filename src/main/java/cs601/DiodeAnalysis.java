@@ -21,17 +21,17 @@ public class DiodeAnalysis {
 	 * @return Buffered Image pattern
 	 */	
 	public BufferedImage getPattern(int[] size){
-		BufferedImage imgResult = srv.map(size[0], size[1]);
+		BufferedImage res = srv.map(size[0], size[1]);
 		for(int i = 0; i < size[0]; i++){
 			for(int j = 0; j < size[1]; j++){
 				if(i == 0 || i == size[0] - 1 || j == 0 || j == size[1] - 1){
-					imgResult.setRGB(i, j, 0xFFFFFF);
+					res.setRGB(i, j, 0xFFFFFF);
 				} else {
-					imgResult.setRGB(i, j, 0);
+					res.setRGB(i, j, 0);
 				}
 			}
 		}
-		return imgResult;
+		return res;
 	}
 	
 	/**

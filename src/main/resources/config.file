@@ -6,3 +6,5 @@ greenIndex=8
 blackWhiteThr=40
 dieSizeThr=1.5f
 dieDistanceTolerance=5
+hStep=1
+wStep=1

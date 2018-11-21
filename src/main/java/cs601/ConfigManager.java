@@ -170,5 +170,39 @@ public class ConfigManager {
 		}
 		return result;
 	}	
+	
+	/**
+	 * 
+	 * hStep
+	 * height step walking through image
+	 * 1
+	 * 
+	 */
+	public String getHStep() {
+		String result = "";
+		if(prop.get("hStep") != null) {
+			result = prop.get("hStep").toString();
+		}else {
+			System.out.println("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}	
+	
+	/**
+	 * 
+	 * wStep
+	 * width step walking through image
+	 * 1
+	 * 
+	 */
+	public String getWStep() {
+		String result = "";
+		if(prop.get("wStep") != null) {
+			result = prop.get("wStep").toString();
+		}else {
+			System.out.println("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}	
 
 }

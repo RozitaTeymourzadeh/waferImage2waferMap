@@ -21,16 +21,15 @@ import org.apache.logging.log4j.Logger;
 public class Run {
 	private static Logger LOG = LogManager.getLogger(Run.class);
 	private static File cacheFolder = null;
-	private static Integer hStep;
-	private static Integer wStep;
 
 	public static void main(String[] args) {
 
 		Service srv = new Service();
+
 		LOG.info("Convesion is started ..." + Run.class.getName());
 		File folder = new File(ConfigManager.getConfig().getInput());//Read the waferIMG file
-		hStep = Integer.parseInt(ConfigManager.getConfig().getHStep());
-		wStep = Integer.parseInt(ConfigManager.getConfig().getWStep());
+//		int hStep = Integer.parseInt(ConfigManager.getConfig().getHStep());
+//		int wStep = Integer.parseInt(ConfigManager.getConfig().getWStep());
 		cacheFolder = new File(folder.getParent(), "cache");
 
 		// create cache file
@@ -54,6 +53,7 @@ public class Run {
 
 	private static void convert(File imageFile) {
 		BufferedImage image = null;
+		ScanImage scnImg = new ScanImage();
 		String prefix = imageFile.getAbsolutePath();
 		String imageName = imageFile.getName(); 
 		int[] state = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
@@ -98,85 +98,22 @@ public class Run {
 		// th, tolerance are Die size parameters
 		float dieSizeThr = Float.parseFloat(ConfigManager.getConfig().getDieSizeThr());
 		Integer dieDistanceTolerance = Integer.parseInt(ConfigManager.getConfig().getDieDistanceTolerance());
-		//		int tolerance = dieDistanceTolerance;// defined distance btw 2 dies, 
 
 		/* ----------find top---------- */
-		int startLine = 0;
-		int lineCounter = 0;
-		for (int h = startLine; h < image.getHeight(); h++)
-		{
-			int pixelCounter = 0;
-			for (int w = 1; w < image.getWidth(); w++)
-			{
-				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
-					pixelCounter++;
-				}
-			}
-			if(pixelCounter > (dieSizeThr * dieSize[1])){
-				lineCounter++;
-			} else{
-				lineCounter = 0;
-			}
 
-			if(lineCounter == dieDistanceTolerance ){
-				startLine = h - dieDistanceTolerance  - 1;
-				break;
-			}
-		}
+		int startLine = scnImg.findTopDiode(image, dieSize);
 
 		/* ---------- find bottom ---------- */
 
-		int endLine = image.getHeight() - 1;
-		lineCounter = 0;
-		for (int h = endLine; h > startLine ; h--)
-		{
-			int pixelCounter = 0;
-			for (int w = 1; w < image.getWidth(); w++)
-			{
-				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
-					pixelCounter++;
-				}
-			}
-			if(pixelCounter > (dieSizeThr * dieSize[1])){
-				lineCounter++;
-			} else{
-				lineCounter = 0;
-			}
-
-			if(lineCounter == dieDistanceTolerance ){
-				endLine = h + dieDistanceTolerance  + 1;
-				break;
-			}
-		}
+		int endLine = scnImg.findBottomDiode(image, dieSize, startLine);
 
 		/* ----------find left---------- */
 
-		int leftLine = 0;
-		lineCounter = 0;
-		for (int w = leftLine; w < image.getWidth(); w++)
-		{
-			int pixelCounter = 0;
-			for (int h = 0; h < image.getHeight() ; h++)
-			{
-				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
-					pixelCounter++;
-				}
-			}
-			if(pixelCounter > (dieSizeThr * dieSize[1])){
-				lineCounter++;
-			} else{
-				lineCounter = 0;
-			}
-
-			if(lineCounter == dieDistanceTolerance ){
-				leftLine = w - dieDistanceTolerance  - 1;
-				break;
-			}
-		}
+		int leftLine = scnImg.finfLeftDiode(image, dieSize);
 
 		/* ----------find right----------*/
 		int rightLine = image.getWidth() - 1;
-		lineCounter = 0;
+		int lineCounter = 0;
 		for (int w = rightLine; w > leftLine; w--)
 		{
 			int pixelCounter = 0;
@@ -428,6 +365,9 @@ public class Run {
 
 
 
+
+
+
 	private static boolean[] findLeft(BufferedImage img, BufferedImage pattern, int x, int y, float thrL){
 		boolean[] res = new boolean[100];
 		int index = 100 - 1;
@@ -552,8 +492,6 @@ public class Run {
 		}
 		return res;
 	}
-
-
 
 
 	private static void savePNG( final BufferedImage bi, final String path ){

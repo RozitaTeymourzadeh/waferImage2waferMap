@@ -104,4 +104,28 @@ public class UnitTest {
 		Assert.assertEquals(1, Integer.parseInt(wStep));
 	}
 	
+	@Test
+	public void testThrUp() throws IOException {
+		String thrUp = ConfigManager.getConfig().getThrUp();
+		Assert.assertEquals(0.3f, Float.parseFloat(thrUp),0.0f);
+	}
+	
+	@Test
+	public void testThrDown() throws IOException {
+		String thrDown = ConfigManager.getConfig().getThrDown();
+		Assert.assertEquals(0.3f, Float.parseFloat(thrDown),0.0f);
+	}
+	
+	@Test
+	public void testThrLeft() throws IOException {
+		String thrLeft = ConfigManager.getConfig().getThrLeft();
+		Assert.assertEquals(0.3f, Float.parseFloat(thrLeft),0.0f);
+	}
+	
+	@Test
+	public void testThrRight() throws IOException {
+		String thrRight = ConfigManager.getConfig().getThrRight();
+		Assert.assertEquals(0.3f, Float.parseFloat(thrRight),0.0f);
+	}
+	
 }

@@ -4,8 +4,11 @@ import java.awt.image.BufferedImage;
 
 public class FindPattern {
 	
-	public boolean[] findLeft(BufferedImage img, BufferedImage pattern, int x, int y, float thrL){
-		boolean[] res = new boolean[100];
+	private float thrLeft = Float.parseFloat(ConfigManager.getConfig().getThrLeft());
+	private float thrRight = Float.parseFloat(ConfigManager.getConfig().getThrRight());
+	
+	public boolean[] findLeft(BufferedImage img, BufferedImage pattern, int x, int y){
+		boolean[] resultLineLeft = new boolean[100];
 		int index = 100 - 1;
 		for( ; index >= 0 && x >= 1; x -= pattern.getWidth(), index--){
 			float[][] sim = new float[3][3];
@@ -28,24 +31,24 @@ public class FindPattern {
 				}	
 			}
 
-			if(sim[xTemp][yTemp] > thrL){
-				res[index] = true;
+			if(sim[xTemp][yTemp] > thrLeft){
+				resultLineLeft[index] = true;
 				y += yTemp - 1;
 				x += xTemp - 1;
 			} else {
-				res[index] = false;
+				resultLineLeft[index] = false;
 			}
 		}
 
 		for(; index >= 0; index--){
-			res[index] = false;
+			resultLineLeft[index] = false;
 		}
 
-		return res;
+		return resultLineLeft;
 	}
 
-	public boolean[] findRight(BufferedImage img, BufferedImage pattern, int x, int y, float thrR){
-		boolean[] res = new boolean[100];
+	public boolean[] findRight(BufferedImage img, BufferedImage pattern, int x, int y){
+		boolean[] resultLineRight = new boolean[100];
 		int index = 0;
 		for( ; index < 100 && x < img.getWidth() - pattern.getWidth() - 1; x += pattern.getWidth(), index++){
 			float[][] sim = new float[3][3];
@@ -68,20 +71,20 @@ public class FindPattern {
 				}
 			}
 
-			if(sim[xTemp][yTemp] > thrR){
-				res[index] = true;
+			if(sim[xTemp][yTemp] > thrRight){
+				resultLineRight[index] = true;
 				y += yTemp - 1;
 				x += xTemp - 1;
 			} else {
-				res[index] = false;
+				resultLineRight[index] = false;
 			}
 		}
 
 		for(; index < 100; index++){
-			res[index] = false;
+			resultLineRight[index] = false;
 		}
 
-		return res;
+		return resultLineRight;
 	}
 	
 	public float getSimilarity(BufferedImage img, int x, int y, BufferedImage pattern){
@@ -100,7 +103,8 @@ public class FindPattern {
 			}
 		}
 
-		float res = 1 - diff / counter;//(width * height);
-		return res*res*res*res;
+		float result = 1 - diff / counter;//(width * height);
+		result = result * result * result * result;
+		return result;
 	}
 }

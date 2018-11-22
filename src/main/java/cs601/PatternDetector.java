@@ -55,8 +55,6 @@ public class PatternDetector {
 	}
 
 
-
-
 	public boolean[] findRight(BufferedImage img, BufferedImage pattern, int x, int y){
 		boolean[] res = new boolean[100];
 		int index = 0;
@@ -124,5 +122,19 @@ public class PatternDetector {
 		return res*res*res*res;
 	}
 
+	public BufferedImage getPattern(int[] size){
+		Service srv = new Service();
+		BufferedImage res = srv.map(size[0], size[1]);
+		for(int i = 0; i < size[0]; i++){
+			for(int j = 0; j < size[1]; j++){
+				if(i == 0 || i == size[0] - 1 || j == 0 || j == size[1] - 1){
+					res.setRGB(i, j, 0xFFFFFF);
+				} else {
+					res.setRGB(i, j, 0);
+				}
+			}
+		}
+		return res;
+	}
 
 }

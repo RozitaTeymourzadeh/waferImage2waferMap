@@ -29,8 +29,8 @@ public class Run {
 
 		LOG.info("Convesion is started ..." + Run.class.getName());
 		File folder = new File(ConfigManager.getConfig().getInput());//Read the waferIMG file
-//		int hStep = Integer.parseInt(ConfigManager.getConfig().getHStep());
-//		int wStep = Integer.parseInt(ConfigManager.getConfig().getWStep());
+		//		int hStep = Integer.parseInt(ConfigManager.getConfig().getHStep());
+		//		int wStep = Integer.parseInt(ConfigManager.getConfig().getWStep());
 		cacheFolder = new File(folder.getParent(), "cache");
 
 		// create cache file
@@ -115,50 +115,16 @@ public class Run {
 
 		width = rightLine - leftLine + 1;
 		height = endLine - startLine + 1;
-	
+
 		image = filter.cropFilter(image, prefix, height, width, startLine, endLine, leftLine, rightLine);
 
 		/* ----------To calculate and print Die size----------*/ 	
-
-		BufferedImage pattern = getPattern(dieSize);
-		srv.savePNG(pattern, prefix +"_Pattern.png");
-		WaferMap wafer = new WaferMap();
-		waferMap = wafer.createWaferMap(image, height, width, pattern);
-		try {
-			FileOperation fileOperation = new FileOperation(waferMap);
-			File mapFile = new File(ConfigManager.getConfig().getOutput(), imageName +".txt");
-			BufferedWriter output;
-			output = new BufferedWriter(new FileWriter(mapFile));
-			fileOperation.indexCalculator();
-			/* Create ASIC header*/
-			output.write("DEVICE PD_Side-nz\r\n");
-			output.write("ROWCNT " + (fileOperation.getiEnd()-fileOperation.getiStart()+1)+ "\r\n");
-			output.write("COLCNT " + (fileOperation.getjEnd()-fileOperation.getjStart()+1)+ "\r\n");
-			output.write("PASBIN 1\r\n");
-			output.write("SKPBIN .\r\n");
-			output.write("NULBIN _\r\n");
-			output.write("REFBIN R\r\n");
-			output.write("WAFDIA 8\r\n");
-			output.write("XDIES1 " + dieSize[0] + "\r\n");
-			output.write("YDIES1 " + dieSize[0] + "\r\n");
-			int lineNum = 1;
-			for(int i = fileOperation.getiStart(); i <= fileOperation.getiEnd(); i++, lineNum++){
-				//output.write("MAP"+String.format("%03d", lineNum) +" ");
-				for(int j = fileOperation.getjStart(); j <= fileOperation.getjEnd(); j++){
-					output.write(waferMap[i][j]?'1':'.');
-				}
-				output.write("\r\n") ;	
-			}
-			output.flush();
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		LayoutGenerator layout = new LayoutGenerator();
+		layout.printLayout(image, prefix, imageName, height, width, dieSize);
 		System.out.println("Done!");
 
 	}
 
-	
 
 
 
@@ -174,20 +140,9 @@ public class Run {
 
 
 
-	private static BufferedImage getPattern(int[] size){
-		Service srv = new Service();
-		BufferedImage res = srv.map(size[0], size[1]);
-		for(int i = 0; i < size[0]; i++){
-			for(int j = 0; j < size[1]; j++){
-				if(i == 0 || i == size[0] - 1 || j == 0 || j == size[1] - 1){
-					res.setRGB(i, j, 0xFFFFFF);
-				} else {
-					res.setRGB(i, j, 0);
-				}
-			}
-		}
-		return res;
-	}
+
+
+
 
 
 

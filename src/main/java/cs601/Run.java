@@ -123,71 +123,28 @@ public class Run {
 		BufferedImage pattern = getPattern(dieSize);
 		srv.savePNG(pattern, prefix +"_Pattern.png");
 		WaferMap wafer = new WaferMap();
-
-
-		
-
 		waferMap = wafer.createWaferMap(image, height, width, pattern);
-
-		int iStart = 0;
-		int iEnd = 300 - 1;
-		int jStart = 0;
-		int jEnd = 300 - 1;
-
-		for(int i = iStart; i < 300 && iStart == 0; i++){
-			for(int j = jStart; j <= jEnd; j++){
-				if(waferMap[i][j]){
-					iStart = i;
-					break;
-				}
-			}
-		}
-		for(int i = iEnd; i > iStart && iEnd == 300 - 1; i--){
-			for(int j = jStart; j <= jEnd; j++){
-				if(waferMap[i][j]){
-					iEnd = i;
-					break;
-				}
-			}
-		}
-		for(int j = jStart; j < 300 && jStart == 0; j++){
-			for(int i = iStart; i <= iEnd; i++){
-				if(waferMap[i][j]){
-					jStart = j;
-					break;
-				}
-			}
-		}
-		for(int j = jEnd - 1; j > jStart && jEnd == 300 - 1; j--){
-			for(int i = iStart; i <= iEnd; i++){
-				if(waferMap[i][j]){
-					jEnd = j;
-					break;
-				}
-			}
-		}
-
 		try {
-
+			FileOperation fileOperation = new FileOperation(waferMap);
 			File mapFile = new File(ConfigManager.getConfig().getOutput(), imageName +".txt");
 			BufferedWriter output;
 			output = new BufferedWriter(new FileWriter(mapFile));
-
+			fileOperation.indexCalculator();
 			/* Create ASIC header*/
 			output.write("DEVICE PD_Side-nz\r\n");
-			output.write("ROWCNT " + (iEnd-iStart+1)+ "\r\n");
-			output.write("COLCNT " + (jEnd-jStart+1)+ "\r\n");
+			output.write("ROWCNT " + (fileOperation.getiEnd()-fileOperation.getiStart()+1)+ "\r\n");
+			output.write("COLCNT " + (fileOperation.getjEnd()-fileOperation.getjStart()+1)+ "\r\n");
 			output.write("PASBIN 1\r\n");
 			output.write("SKPBIN .\r\n");
 			output.write("NULBIN _\r\n");
 			output.write("REFBIN R\r\n");
 			output.write("WAFDIA 8\r\n");
-			output.write("XDIES1 0.500000\r\n");
-			output.write("YDIES1 0.500000\r\n");
+			output.write("XDIES1 " + dieSize[0] + "\r\n");
+			output.write("YDIES1 " + dieSize[0] + "\r\n");
 			int lineNum = 1;
-			for(int i = iStart; i <= iEnd; i++, lineNum++){
+			for(int i = fileOperation.getiStart(); i <= fileOperation.getiEnd(); i++, lineNum++){
 				//output.write("MAP"+String.format("%03d", lineNum) +" ");
-				for(int j = jStart; j <= jEnd; j++){
+				for(int j = fileOperation.getjStart(); j <= fileOperation.getjEnd(); j++){
 					output.write(waferMap[i][j]?'1':'.');
 				}
 				output.write("\r\n") ;	

@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 public class Run {
 	private static Logger LOG = LogManager.getLogger(Run.class);
 	private static File cacheFolder = null;
-
 	public static void main(String[] args) {
 
 		LOG.info("Convesion is started ..." + Run.class.getName());

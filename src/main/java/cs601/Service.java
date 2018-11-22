@@ -66,5 +66,18 @@ public class Service {
 		}
 		return resultImage;
 	}
+	
+	/**
+	 * Delete Folder
+	 * @param folder
+	 */
+	public void delete(File folder) {
+		File[] imgsProcessed  = folder.listFiles();
+		for(int i1 = 0 ; i1 < imgsProcessed.length ; i1++) {
+			if(imgsProcessed[i1].getName().toLowerCase().contains("crop") || imgsProcessed[i1].getName().toLowerCase().contains("pattern")) {				
+				imgsProcessed[i1].delete();
+			}
+		}
+	}
 
 }

@@ -128,4 +128,10 @@ public class UnitTest {
 		Assert.assertEquals(0.3f, Float.parseFloat(thrRight),0.0f);
 	}
 	
+	@Test
+	public void testMaxDiodePerLine() throws IOException {
+		String maxDiodePerLine = ConfigManager.getConfig().getMaxDiodePerLine();
+		Assert.assertEquals(300, Integer.parseInt(maxDiodePerLine));
+	}
+	
 }

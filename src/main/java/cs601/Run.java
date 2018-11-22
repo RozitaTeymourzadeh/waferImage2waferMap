@@ -114,19 +114,17 @@ public class Run {
 
 		width = rightLine - leftLine + 1;
 		height = endLine - startLine + 1;
-
-		/* ----------crop image----------*/
-		
+	
 		image = filter.cropFilter(image, prefix, height, width, startLine, endLine, leftLine, rightLine);
 
 		/* ----------To calculate and print Die size----------*/ 	
 
 		BufferedImage pattern = getPattern(dieSize);
-		srv.savePNG(pattern, prefix+"_Pattern.png");
-		float thr1 = 0.3f; //Pattern similarity percentage for upper part of image
-		float thr2 = 0.3f; //Pattern similarity percentage for down part of image
-		float thrL = 0.3f;
-		float thrR = 0.3f;
+		srv.savePNG(pattern, prefix +"_Pattern.png");
+		float thrUp = Float.parseFloat(ConfigManager.getConfig().getThrUp());
+		float thrDown = Float.parseFloat(ConfigManager.getConfig().getThrDown());
+		float thrLeft = Float.parseFloat(ConfigManager.getConfig().getThrLeft());
+		float thrRight = Float.parseFloat(ConfigManager.getConfig().getThrRight());
 
 		boolean[][] waferMap = new boolean[300][300];
 
@@ -185,14 +183,14 @@ public class Run {
 			}
 
 
-			if(sim[xTemp][yTemp] > thr1){
+			if(sim[xTemp][yTemp] > thrUp){
 				y += yTemp - 1;
 				x += xTemp - 1;
 			} else {
 			}
 
-			boolean[] left = findLeft(image, pattern, x, y,thrL);
-			boolean[] right = findRight(image, pattern, x, y, thrR);
+			boolean[] left = findLeft(image, pattern, x, y,thrLeft);
+			boolean[] right = findRight(image, pattern, x, y, thrRight);
 			for(int i = 100 - 1, j = 150; i >= 0; i--, j--)
 			{
 				waferMap[index][j] = left[i];
@@ -228,14 +226,14 @@ public class Run {
 				}	
 			}
 
-			if(sim[xTemp][yTemp] > thr2){
+			if(sim[xTemp][yTemp] > thrDown){
 				y += yTemp - 1;
 				x += xTemp - 1;
 			} else {
 			}
 
-			boolean[] right = findRight(image, pattern, x, y, thrR);
-			boolean[] left = findLeft(image, pattern, x, y, thrL);
+			boolean[] right = findRight(image, pattern, x, y, thrRight);
+			boolean[] left = findLeft(image, pattern, x, y, thrLeft);
 			for(int i = 100 - 1, j = 150; i >= 0; i--, j--)
 			{
 				waferMap[index][j] = left[i];

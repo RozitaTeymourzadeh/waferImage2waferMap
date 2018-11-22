@@ -61,6 +61,7 @@ public class Run {
 		ImageProcessingTools imageTool = new ImageProcessingTools();
 		Filter filter = new Filter();
 		Service srv = new Service();
+		Measurement msrt = new Measurement();
 		// get rid of .jpg
 		if(imageName.indexOf(".") > 0) {
 			imageName = imageName.substring(0, imageName.lastIndexOf(".") );
@@ -92,7 +93,7 @@ public class Run {
 		/*  ---------- Normalize RGB to Black and White ---------- */
 		image = imageTool.normalizedBlackWhite(image, height, width);
 
-		int[] dieSize = calcSize(image, 0, image.getWidth() - 1, 0, image.getHeight() - 1);
+		int[] dieSize = msrt.calcSize(image, 0, image.getWidth() - 1, 0, image.getHeight() - 1);
 		for(int i = 0; i<2; i++)
 		{
 			LOG.info("Die size is :" + dieSize[i]);
@@ -123,111 +124,5 @@ public class Run {
 		layout.printLayout(image, prefix, imageName, height, width, dieSize);
 		System.out.println("Done!");
 
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	private static int[] calcSize(BufferedImage img, int left, int right, int top, int bottom){
-		ImageProcessingTools imageTool = new ImageProcessingTools();
-		int dieHeight = 0;
-		int spaceHeight = 0;
-		int dieWidth = 0;
-		int spaceWidth = 0;
-
-		int[] die = new int[100];
-		int[] space = new int[100];
-
-		int counterDie = 0;
-		int counterSpace = 0;
-
-		for (int w = left; w <= right; w++)
-		{
-			for (int h = top; h <= bottom; h++)
-			{
-				if(imageTool.makeRGB(img.getRGB(w, h)) == 0){
-					if(counterSpace != 0 && counterSpace < 100){
-						space[counterSpace] = space[counterSpace] + 1;
-					}
-					counterSpace = 0;
-					counterDie++;
-				}else {
-					if(counterDie != 0 && counterDie < 100){
-						die[counterDie] = die[counterDie] + 1;
-					}
-					counterSpace++;
-					counterDie = 0;
-				}
-			}
-			counterDie = 0;
-			counterSpace = 0;
-		}
-		for(int i = 0; i < 100; i++){
-			if(die[i] > die[dieHeight]){
-				dieHeight = i;
-			}
-			if(space[i] > space[spaceHeight]){
-				spaceHeight = i;
-			}
-		}
-
-
-		counterDie = 0;
-		counterSpace = 0;
-		for (int h = top; h <= bottom; h++)
-		{
-			for (int w = left; w <= right; w++)
-			{
-				if(imageTool.makeRGB(img.getRGB(w, h)) == 0){
-					if(counterSpace != 0 && counterSpace < 100){
-						space[counterSpace] = space[counterSpace] + 1;
-					}
-					counterSpace = 0;
-					counterDie++;
-				}else {
-					if(counterDie != 0 && counterDie < 100){
-						die[counterDie] = die[counterDie] + 1;
-					}
-					counterSpace++;
-					counterDie = 0;
-				}
-			}
-			counterDie = 0;
-			counterSpace = 0;
-		}
-
-		for(int i = 0; i < 100; i++){
-			if(die[i] > die[dieWidth]){
-				dieWidth = i;
-			}
-			if(space[i] > space[spaceWidth]){
-				spaceWidth = i;
-			}
-		}
-
-		int[] res = new int[2];
-
-		res[0] = dieWidth + spaceWidth;
-		res[1] = dieHeight + spaceHeight;
-		return res;
 	}
 }

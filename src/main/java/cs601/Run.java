@@ -31,7 +31,6 @@ public class Run {
 				conv.convert(imgs[i]);
 			}
 		}
-		// Delet processed files
 		srv.delete(folder);
 		LOG.info("Conversion Process was completed!!");
 	}

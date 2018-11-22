@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * @author rozitateymourzadeh
@@ -15,6 +18,7 @@ import java.util.Properties;
  */
 public class ConfigManager {
 
+	private static Logger LOG = LogManager.getLogger(ConfigManager.class);
 	private static Properties prop = new Properties();
 	private static ConfigManager CONFIG = null;
 	private static String PROJECT_CONFIG_FILE = "src/main/resources/config.file";
@@ -41,7 +45,7 @@ public class ConfigManager {
 				prop.load(input);
 				CONFIG = new ConfigManager();
 			} catch (IOException e) {
-				System.out.println("The configuration file is not find.");
+				LOG.error("The configuration file is not find.");
 			} 	
 		}
 		return CONFIG;
@@ -57,7 +61,7 @@ public class ConfigManager {
 		if(prop.get("input") != null) {
 			result = prop.get("input").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}
@@ -72,7 +76,7 @@ public class ConfigManager {
 		if(prop.get("output") != null) {
 			result = prop.get("output").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}	
@@ -87,7 +91,7 @@ public class ConfigManager {
 		if(prop.get("grayScale") != null) {
 			result = prop.get("grayScale").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}	
@@ -102,7 +106,7 @@ public class ConfigManager {
 		if(prop.get("redIndex") != null) {
 			result = prop.get("redIndex").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}
@@ -117,7 +121,7 @@ public class ConfigManager {
 		if(prop.get("greenIndex") != null) {
 			result = prop.get("greenIndex").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}
@@ -132,7 +136,7 @@ public class ConfigManager {
 		if(prop.get("blackWhiteThr") != null) {
 			result = prop.get("blackWhiteThr").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}
@@ -149,7 +153,7 @@ public class ConfigManager {
 		if(prop.get("dieSizeThr") != null) {
 			result = prop.get("dieSizeThr").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}	
@@ -166,7 +170,7 @@ public class ConfigManager {
 		if(prop.get("dieDistanceTolerance") != null) {
 			result = prop.get("dieDistanceTolerance").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}	
@@ -183,7 +187,7 @@ public class ConfigManager {
 		if(prop.get("hStep") != null) {
 			result = prop.get("hStep").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}	
@@ -200,7 +204,7 @@ public class ConfigManager {
 		if(prop.get("wStep") != null) {
 			result = prop.get("wStep").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}	
@@ -217,7 +221,7 @@ public class ConfigManager {
 		if(prop.get("thrUp") != null) {
 			result = prop.get("thrUp").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}	
@@ -234,7 +238,7 @@ public class ConfigManager {
 		if(prop.get("thrDown") != null) {
 			result = prop.get("thrDown").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}	
@@ -251,7 +255,7 @@ public class ConfigManager {
 		if(prop.get("thrLeft") != null) {
 			result = prop.get("thrLeft").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}
@@ -268,7 +272,7 @@ public class ConfigManager {
 		if(prop.get("thrRight") != null) {
 			result = prop.get("thrRight").toString();
 		}else {
-			System.out.println("Property is Not find. Check the configuration file.");
+			LOG.error("Property is Not find. Check the configuration file.");
 		}
 		return result;
 	}

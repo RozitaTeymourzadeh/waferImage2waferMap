@@ -6,18 +6,19 @@ package cs601;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * Conversion Class 
+ * To do image conversion 
+ * 
  * @author rozitateymourzadeh
  *
  */
 public class Conversion {
-	private static Logger LOG = LogManager.getLogger(Run.class);
+	private static Logger LOG = LogManager.getLogger(Conversion.class);
 	BufferedImage image = null;
 	ScanImage scnImg = new ScanImage();
 	
@@ -33,6 +34,7 @@ public class Conversion {
 		ImageProcessingTools imageTool = new ImageProcessingTools();
 		Filter filter = new Filter();
 		Measurement msrt = new Measurement();
+		LayoutGenerator layout = new LayoutGenerator();
 		if(imageName.indexOf(".") > 0) {
 			imageName = imageName.substring(0, imageName.lastIndexOf(".") );
 		}
@@ -50,18 +52,8 @@ public class Conversion {
 
 		// Convert Image to black and white image
 		state = imageTool.createBlackWhite(image, height, width);
-
-		// find maximum index of state
-		int max = 0;
-		int maxLimit = Integer.parseInt(ConfigManager.getConfig().getGrayScale());
-		for(int i = 0; i < maxLimit; i++){
-			if(state[i] > state[max])
-				max = i;
-		}
-
-		/*  ---------- Normalize RGB to Black and White ---------- */
+		// Normalize RGB to Black and White
 		image = imageTool.normalizedBlackWhite(image, height, width);
-
 		int[] dieSize = msrt.calcSize(image, 0, image.getWidth() - 1, 0, image.getHeight() - 1);
 		for(int i = 0; i<2; i++)
 		{
@@ -85,13 +77,9 @@ public class Conversion {
 
 		width = rightLine - leftLine + 1;
 		height = endLine - startLine + 1;
-
 		image = filter.cropFilter(image, prefix, height, width, startLine, endLine, leftLine, rightLine);
-		/* ----------To calculate and print Die size----------*/ 	
-		LayoutGenerator layout = new LayoutGenerator();
+		// To calculate and print Die size
 		layout.printLayout(image, prefix, imageName, height, width, dieSize);
 		LOG.info("Done!");
-
 	}
-
 }

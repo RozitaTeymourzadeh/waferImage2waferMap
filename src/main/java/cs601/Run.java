@@ -123,8 +123,8 @@ public class Run {
 		srv.savePNG(pattern, prefix +"_Pattern.png");
 		float thrUp = Float.parseFloat(ConfigManager.getConfig().getThrUp());
 		float thrDown = Float.parseFloat(ConfigManager.getConfig().getThrDown());
-		float thrLeft = Float.parseFloat(ConfigManager.getConfig().getThrLeft());
-		float thrRight = Float.parseFloat(ConfigManager.getConfig().getThrRight());
+		PatternDetector patternDetector = new PatternDetector();
+
 
 		boolean[][] waferMap = new boolean[300][300];
 
@@ -141,7 +141,7 @@ public class Run {
 
 		for(int i = 0; i < pattern.getWidth(); i++){
 			for(int j = 0; j < pattern.getHeight(); j++){
-				sim[i][j] = getSimilarity(image, x+i, y+j, pattern);
+				sim[i][j] = patternDetector.getSimilarity(image, x+i, y+j, pattern);
 			}
 		}
 		int x0 = 0;
@@ -166,7 +166,7 @@ public class Run {
 
 			for(int i = -1; i <= 1; i++){
 				for(int j = -1; j <= 1; j++){
-					sim[i+1][j+1] = getSimilarity(image, x+i, y+j, pattern);
+					sim[i+1][j+1] = patternDetector.getSimilarity(image, x+i, y+j, pattern);
 				}	
 			}
 
@@ -189,8 +189,8 @@ public class Run {
 			} else {
 			}
 
-			boolean[] left = findLeft(image, pattern, x, y,thrLeft);
-			boolean[] right = findRight(image, pattern, x, y, thrRight);
+			boolean[] left = patternDetector.findLeft(image, pattern, x, y);
+			boolean[] right = patternDetector.findRight(image, pattern, x, y);
 			for(int i = 100 - 1, j = 150; i >= 0; i--, j--)
 			{
 				waferMap[index][j] = left[i];
@@ -210,7 +210,7 @@ public class Run {
 
 			for(int i = -1; i <= 1; i++){
 				for(int j = -1; j <= 1; j++){
-					sim[i+1][j+1] = getSimilarity(image, x+i, y+j, pattern);
+					sim[i+1][j+1] = patternDetector.getSimilarity(image, x+i, y+j, pattern);
 				}	
 			}
 
@@ -232,8 +232,8 @@ public class Run {
 			} else {
 			}
 
-			boolean[] right = findRight(image, pattern, x, y, thrRight);
-			boolean[] left = findLeft(image, pattern, x, y, thrLeft);
+			boolean[] right = patternDetector.findRight(image, pattern, x, y);
+			boolean[] left = patternDetector.findLeft(image, pattern, x, y);
 			for(int i = 100 - 1, j = 150; i >= 0; i--, j--)
 			{
 				waferMap[index][j] = left[i];
@@ -328,116 +328,8 @@ public class Run {
 
 
 
-	private static boolean[] findLeft(BufferedImage img, BufferedImage pattern, int x, int y, float thrL){
-		boolean[] res = new boolean[100];
-		int index = 100 - 1;
-		for( ; index >= 0 && x >= 1; x -= pattern.getWidth(), index--){
-			float[][] sim = new float[3][3];
-
-			for(int i = -1; i <= 1; i++){
-				for(int j = -1; j <= 1; j++){
-					sim[i+1][j+1] = getSimilarity(img, x+i, y+j, pattern);
-				}	
-			}
-
-			int xTemp = 1;
-			int yTemp = 1;
-
-			for(int i = 0; i < 3; i++){
-				for(int j = 0; j < 3; j++){
-					if(sim[i][j] > sim[xTemp][yTemp]){
-						xTemp = i;
-						yTemp = j;
-					}
-				}	
-			}
-
-			if(sim[xTemp][yTemp] > thrL){
-				res[index] = true;
-				y += yTemp - 1;
-				x += xTemp - 1;
-			} else {
-				res[index] = false;
-			}
-		}
-
-		for(; index >= 0; index--){
-			res[index] = false;
-		}
-
-		return res;
-	}
 
 
-
-
-	private static boolean[] findRight(BufferedImage img, BufferedImage pattern, int x, int y, float thrR){
-		boolean[] res = new boolean[100];
-		int index = 0;
-		for( ; index < 100 && x < img.getWidth() - pattern.getWidth() - 1; x += pattern.getWidth(), index++){
-			float[][] sim = new float[3][3];
-
-			for(int i = -1; i <= 1; i++){
-				for(int j = -1; j <= 1; j++){
-					sim[i+1][j+1] = getSimilarity(img, x+i, y+j, pattern);
-				}	
-			}
-
-			int xTemp = 1;
-			int yTemp = 1;
-
-			for(int i = 0; i < 3; i++){
-				for(int j = 0; j < 3; j++){
-					if(sim[i][j] > sim[xTemp][yTemp]){
-						xTemp = i;
-						yTemp = j;
-					}
-				}
-			}
-
-			if(sim[xTemp][yTemp] > thrR){
-				res[index] = true;
-				y += yTemp - 1;
-				x += xTemp - 1;
-			} else {
-				res[index] = false;
-			}
-		}
-
-		for(; index < 100; index++){
-			res[index] = false;
-		}
-
-		return res;
-	}
-
-
-	static int cacheCounter = 0;
-	private static float getSimilarity(BufferedImage img, int x, int y, BufferedImage pattern){
-		Service srv = new Service();
-		float diff = 0;
-
-		int width = pattern.getWidth();
-		int height = pattern.getHeight();
-
-		BufferedImage cache = srv.map(width, height);
-
-		int counter = 0;
-
-		float diameter = (float) Math.sqrt((width*width + height*height)) / 2;
-		for(int i = 0; i < width; i++){
-			for(int j = 0; j < height; j++){
-				counter++;
-				if((x+i) >= img.getWidth() || (y+j) >= img.getHeight() || img.getRGB(x+i, y+j) != pattern.getRGB(i, j)){
-					diff += (float) Math.sqrt((width/2 - i)*(width/2 - i) + (height/2 - j)*(height/2 - j)) / diameter;
-				} else{
-				}
-			}
-		}
-
-		float res = 1 - diff / counter;//(width * height);
-		return res*res*res*res;
-	}
 
 
 	private static BufferedImage getPattern(int[] size){

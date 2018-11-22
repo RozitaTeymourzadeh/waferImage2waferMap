@@ -12,3 +12,4 @@ thrUp=0.3f
 thrDown=0.3f
 thrRight=0.3f
 thrLeft=0.3f
+maxDiodePerLine=300

@@ -276,5 +276,22 @@ public class ConfigManager {
 		}
 		return result;
 	}
+	
+	/**
+	 * 
+	 * Right Diode Threshold
+	 * Pattern similarity percentage for right part of image
+	 * 0.3f
+	 * 
+	 */
+	public String getMaxDiodePerLine() {
+		String result = "";
+		if(prop.get("maxDiodePerLine") != null) {
+			result = prop.get("maxDiodePerLine").toString();
+		}else {
+			LOG.error("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}
 
 }

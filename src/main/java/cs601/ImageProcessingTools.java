@@ -17,6 +17,9 @@ public class ImageProcessingTools {
 	private int[] state = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
 	private int hStep = Integer.parseInt(ConfigManager.getConfig().getHStep());
 	private int wStep = Integer.parseInt(ConfigManager.getConfig().getWStep());
+	private Integer redIndex = Integer.parseInt(ConfigManager.getConfig().getRedIndex());
+	private Integer greenIndex = Integer.parseInt(ConfigManager.getConfig().getGreenIndex());
+	private Integer blackWhiteThr = Integer.parseInt(ConfigManager.getConfig().getBlackWhiteThr());
 	private int rgb;
 	Filter filter = new Filter();
 	
@@ -34,8 +37,6 @@ public class ImageProcessingTools {
 	 */
 	public int[] createBlackWhite(BufferedImage image, int height, int width) {
 		
-		Integer redIndex = Integer.parseInt(ConfigManager.getConfig().getRedIndex());
-		Integer greenIndex = Integer.parseInt(ConfigManager.getConfig().getGreenIndex());
 		for (int h = 1; h < height; h += hStep)
 		{
 			for (int w = 1; w < width; w += wStep)
@@ -64,11 +65,6 @@ public class ImageProcessingTools {
 	 * @param width
 	 */
 	public BufferedImage normalizedBlackWhite(BufferedImage image, int height,int width) {
-		// blue as blue component to detect b/w cropped image
-		Integer blackWhiteThr = Integer.parseInt(ConfigManager.getConfig().getBlackWhiteThr());
-		int hStep = Integer.parseInt(ConfigManager.getConfig().getHStep());
-		int wStep = Integer.parseInt(ConfigManager.getConfig().getWStep());
-		int rgb;
 
 		for (int h = 1; h < height; h+=hStep)
 		{
@@ -96,5 +92,4 @@ public class ImageProcessingTools {
 		}
 		return image;
 	}
-
 }

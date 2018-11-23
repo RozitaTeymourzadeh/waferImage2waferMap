@@ -13,6 +13,8 @@ import javax.imageio.ImageIO;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cs601.Service.ConfigManager;
+
 /**
  * Unit Test 
  * 
@@ -134,6 +136,12 @@ public class UnitTest {
 	public void testMaxDiodePerLine() throws IOException {
 		String maxDiodePerLine = ConfigManager.getConfig().getMaxDiodePerLine();
 		Assert.assertEquals(300, Integer.parseInt(maxDiodePerLine));
+	}
+	
+	@Test
+	public void testAvgComponent() throws IOException {
+		String avgComponent = ConfigManager.getConfig().getAveComponant();
+		Assert.assertEquals(100, Integer.parseInt(avgComponent));
 	}
 	
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn">
 	<Properties>
-		<Property name="basePath">/Users/rozitateymourzadeh/Dropbox/Personal/JobDec2015/USF/CS601/Github/sideProject-waferImage2waferMap-RozitaTeymourzadeh</Property>
+		<Property name="basePath">.</Property>
 	</Properties>
 	<Appenders>
 		<RollingFile name="fileLogger" fileName="${basePath}/logs/sideProject.log"

@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import cs601.Filter.Filter;
 /**
  * Integration Test
  * 

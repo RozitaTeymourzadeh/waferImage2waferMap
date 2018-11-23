@@ -6,7 +6,9 @@ package cs601;
 import java.awt.image.BufferedImage;
 
 /**
- * @author rozitateymourzadeh
+ * Image Processing Tools
+ * A class tool to convert image to Black and white image
+ * @author Rozita Teymourzadeh
  *
  */
 public class ImageProcessingTools {
@@ -60,9 +62,10 @@ public class ImageProcessingTools {
 	 * Normalize RGB to Black and White 
 	 * 
 	 * @param image
-	 * @param imageTool
 	 * @param height
 	 * @param width
+	 * 
+	 * @return image
 	 */
 	public BufferedImage normalizedBlackWhite(BufferedImage image, int height,int width) {
 

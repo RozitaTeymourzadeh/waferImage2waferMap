@@ -4,6 +4,10 @@
 package cs601;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author rozitateymourzadeh
@@ -11,37 +15,45 @@ import java.awt.image.BufferedImage;
  */
 public class WaferMap {
 	
-	PatternDetector patternDetector = new PatternDetector();
-	float thrUp = Float.parseFloat(ConfigManager.getConfig().getThrUp());
-	float thrDown = Float.parseFloat(ConfigManager.getConfig().getThrDown());
+	private static Logger LOG = LogManager.getLogger(WaferMap.class);
+	private PatternDetector patternDetector = new PatternDetector();
+	private float thrUp = Float.parseFloat(ConfigManager.getConfig().getThrUp());
+	private float thrDown = Float.parseFloat(ConfigManager.getConfig().getThrDown());
+	private boolean[][] waferMap = new boolean[300][300];
 	
+
+	/**
+	 * Constructor 
+	 */
+	public WaferMap() {
+		
+	}
 	
 	/**
+	 * createWafer
+	 * 
+	 * To Generate WaferMap
+	 * 
 	 * @param image
 	 * @param height
 	 * @param width
 	 * @param pattern
-	 * @param thrUp
-	 * @param thrDown
-	 * @param patternDetector
-	 * @param waferMap
-	 * @return 
+	 * 	
+	 * @throws IOException 
+	 * @return waferMap
 	 */
-
-	public boolean[][] createWaferMap(BufferedImage image, int height, int width, BufferedImage pattern ) {
-				
-		boolean[][] waferMap = new boolean[300][300];
+	public boolean[][] createWaferMap(BufferedImage image, int height, int width, BufferedImage pattern ) throws IOException {
+		LOG.info("Creating WaferMap is started!");
+		int index = 150;
+		
 		for(int i = 0; i < 300; i++){
 			for(int j = 0; j < 300; j++){
 				waferMap[i][j] = false;
 			}	
 		}
-
 		int x = width / 2;
 		int y = height / 2;
-
 		float[][] sim = new float[pattern.getWidth()][pattern.getHeight()];
-
 		for(int i = 0; i < pattern.getWidth(); i++){
 			for(int j = 0; j < pattern.getHeight(); j++){
 				sim[i][j] = patternDetector.getSimilarity(image, x+i, y+j, pattern);
@@ -59,11 +71,9 @@ public class WaferMap {
 		}
 		x0 += x;
 		y0 += y;
-
 		x = x0;
 		y = y0;
 
-		int index = 150;
 		for( ; index > 0 && y > 1; y -= pattern.getWidth(), index--){
 			sim = new float[3][3];
 
@@ -148,5 +158,19 @@ public class WaferMap {
 
 		}
 		return waferMap;
+	}
+	
+	/*
+	 * Getter
+	 **/
+	public boolean[][] getWaferMap() {
+		return waferMap;
+	}
+
+	/*
+	 * Setter
+	 **/
+	public void setWaferMap(boolean[][] waferMap) {
+		this.waferMap = waferMap;
 	}
 }

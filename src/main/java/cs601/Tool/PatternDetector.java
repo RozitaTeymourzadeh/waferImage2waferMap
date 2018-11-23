@@ -1,12 +1,12 @@
 /**
  * 
  */
-package cs601;
+package cs601.Tool;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import cs601.Service.ConfigManager;
+import cs601.Service.Service;
 
 /**
  * PatternDetector
@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 public class PatternDetector {
 	private float thrLeft = Float.parseFloat(ConfigManager.getConfig().getThrLeft());
 	private float thrRight = Float.parseFloat(ConfigManager.getConfig().getThrRight());
+	private Integer avgComponent = Integer.parseInt(ConfigManager.getConfig().getAveComponant());
 	private Service srv = new Service();
 	
 	/**
@@ -40,8 +41,8 @@ public class PatternDetector {
 	 * @return boolean[] result
 	 */
 	public boolean[] findLeft(BufferedImage img, BufferedImage pattern, int x, int y) throws IOException{
-		boolean[] result = new boolean[100];
-		int index = 100 - 1;
+		boolean[] result = new boolean[avgComponent];
+		int index = avgComponent - 1;
 		for( ; index >= 0 && x >= 1; x -= pattern.getWidth(), index--){
 			float[][] sim = new float[3][3];
 
@@ -90,9 +91,9 @@ public class PatternDetector {
 	 * @throws IOException
 	 */
 	public boolean[] findRight(BufferedImage img, BufferedImage pattern, int x, int y) throws IOException{
-		boolean[] result = new boolean[100];
+		boolean[] result = new boolean[avgComponent];
 		int index = 0;
-		for( ; index < 100 && x < img.getWidth() - pattern.getWidth() - 1; x += pattern.getWidth(), index++){
+		for( ; index < avgComponent && x < img.getWidth() - pattern.getWidth() - 1; x += pattern.getWidth(), index++){
 			float[][] sim = new float[3][3];
 
 			for(int i = -1; i <= 1; i++){
@@ -122,7 +123,7 @@ public class PatternDetector {
 			}
 		}
 
-		for(; index < 100; index++){
+		for(; index < avgComponent; index++){
 			result[index] = false;
 		}
 
@@ -148,7 +149,7 @@ public class PatternDetector {
 		int width = pattern.getWidth();
 		int height = pattern.getHeight();
 
-		BufferedImage cache = srv.map(width, height);
+//		BufferedImage cache = srv.map(width, height);
 
 		int counter = 0;
 

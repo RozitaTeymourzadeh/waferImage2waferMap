@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cs601;
+package cs601.Filter;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -9,6 +9,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import cs601.File.LayoutGenerator;
+import cs601.Service.ConfigManager;
+import cs601.Tool.Measurement;
+import cs601.Tool.ScanImage;
 
 /**
  * Conversion Class 

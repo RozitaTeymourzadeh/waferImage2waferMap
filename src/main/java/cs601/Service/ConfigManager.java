@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cs601;
+package cs601.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -279,15 +279,32 @@ public class ConfigManager {
 	
 	/**
 	 * 
-	 * Right Diode Threshold
-	 * Pattern similarity percentage for right part of image
-	 * 0.3f
+	 * MaxDiodePerLine
+	 * Maximum number of Die per line
+	 * 300
 	 * 
 	 */
 	public String getMaxDiodePerLine() {
 		String result = "";
 		if(prop.get("maxDiodePerLine") != null) {
 			result = prop.get("maxDiodePerLine").toString();
+		}else {
+			LOG.error("Property is Not find. Check the configuration file.");
+		}
+		return result;
+	}
+	
+	/**
+	 * 
+	 * aveComponent
+	 * Average component in one line 
+	 * 100
+	 * 
+	 */
+	public String getAveComponant() {
+		String result = "";
+		if(prop.get("aveComponent") != null) {
+			result = prop.get("aveComponent").toString();
 		}else {
 			LOG.error("Property is Not find. Check the configuration file.");
 		}

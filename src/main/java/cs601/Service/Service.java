@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cs601;
+package cs601.Service;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -11,6 +11,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import cs601.main.Run;
 
 /**
  * @author rozitateymourzadeh

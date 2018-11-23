@@ -1,13 +1,15 @@
 /**
  * 
  */
-package cs601;
+package cs601.Tool;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import cs601.Service.ConfigManager;
 
 /**
  * @author rozitateymourzadeh

@@ -1,11 +1,14 @@
 /**
  * 
  */
-package cs601;
+package cs601.Filter;
 
 import java.awt.image.BufferedImage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import cs601.Service.ConfigManager;
+import cs601.Service.Service;
 
 /**
  * Filter 

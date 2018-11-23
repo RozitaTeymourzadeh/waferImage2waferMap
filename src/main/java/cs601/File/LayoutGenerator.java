@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cs601;
+package cs601.File;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
@@ -10,6 +10,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import cs601.Service.ConfigManager;
+import cs601.Service.Service;
+import cs601.Tool.PatternDetector;
+import cs601.Tool.WaferMap;
 
 /**
  * Layout Generator Class

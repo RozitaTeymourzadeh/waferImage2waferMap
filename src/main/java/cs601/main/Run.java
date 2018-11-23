@@ -1,11 +1,15 @@
 /**
  * 
  */
-package cs601;
+package cs601.main;
 
 import java.io.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import cs601.Filter.Conversion;
+import cs601.Service.ConfigManager;
+import cs601.Service.Service;
 
 /**
  * Wafer2Map application converts wafer image to wafermap

@@ -1,10 +1,13 @@
 /**
  * 
  */
-package cs601;
+package cs601.Tool;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
+import cs601.Filter.Filter;
+import cs601.Service.ConfigManager;
 
 /**
  * @author Rozita Teymourzaedeh

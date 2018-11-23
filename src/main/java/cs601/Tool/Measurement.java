@@ -1,13 +1,16 @@
 /**
  * 
  */
-package cs601;
+package cs601.Tool;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import cs601.Filter.Filter;
+import cs601.Service.ConfigManager;
 
 /**
  * Measurement Class
@@ -18,6 +21,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class Measurement {
 	private static Logger LOG = LogManager.getLogger(Measurement.class);
+	private Integer avgComponent = Integer.parseInt(ConfigManager.getConfig().getAveComponant());
 	private Filter filter = new Filter();
 	
 	/*
@@ -44,8 +48,8 @@ public class Measurement {
 		int spaceHeight = 0;
 		int dieWidth = 0;
 		int spaceWidth = 0;
-		int[] die = new int[100];
-		int[] space = new int[100];
+		int[] die = new int[avgComponent];
+		int[] space = new int[avgComponent];
 
 		int counterDie = 0;
 		int counterSpace = 0;
@@ -55,13 +59,13 @@ public class Measurement {
 			for (int h = top; h <= bottom; h++)
 			{
 				if(filter.makeRGB(img.getRGB(w, h)) == 0){
-					if(counterSpace != 0 && counterSpace < 100){
+					if(counterSpace != 0 && counterSpace < avgComponent){
 						space[counterSpace] = space[counterSpace] + 1;
 					}
 					counterSpace = 0;
 					counterDie++;
 				}else {
-					if(counterDie != 0 && counterDie < 100){
+					if(counterDie != 0 && counterDie < avgComponent){
 						die[counterDie] = die[counterDie] + 1;
 					}
 					counterSpace++;
@@ -71,7 +75,7 @@ public class Measurement {
 			counterDie = 0;
 			counterSpace = 0;
 		}
-		for(int i = 0; i < 100; i++){
+		for(int i = 0; i < avgComponent; i++){
 			if(die[i] > die[dieHeight]){
 				dieHeight = i;
 			}
@@ -86,13 +90,13 @@ public class Measurement {
 			for (int w = left; w <= right; w++)
 			{
 				if(filter.makeRGB(img.getRGB(w, h)) == 0){
-					if(counterSpace != 0 && counterSpace < 100){
+					if(counterSpace != 0 && counterSpace < avgComponent){
 						space[counterSpace] = space[counterSpace] + 1;
 					}
 					counterSpace = 0;
 					counterDie++;
 				}else {
-					if(counterDie != 0 && counterDie < 100){
+					if(counterDie != 0 && counterDie < avgComponent){
 						die[counterDie] = die[counterDie] + 1;
 					}
 					counterSpace++;
@@ -103,7 +107,7 @@ public class Measurement {
 			counterSpace = 0;
 		}
 
-		for(int i = 0; i < 100; i++){
+		for(int i = 0; i < avgComponent; i++){
 			if(die[i] > die[dieWidth]){
 				dieWidth = i;
 			}

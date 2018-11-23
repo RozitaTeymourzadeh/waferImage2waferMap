@@ -10,9 +10,9 @@ import java.awt.image.BufferedImage;
  *
  */
 public class ScanImage {
-	Integer dieDistanceTolerance = Integer.parseInt(ConfigManager.getConfig().getDieDistanceTolerance());
-	float dieSizeThr = Float.parseFloat(ConfigManager.getConfig().getDieSizeThr());
-	ImageProcessingTools imageTool = new ImageProcessingTools();
+	private Integer dieDistanceTolerance = Integer.parseInt(ConfigManager.getConfig().getDieDistanceTolerance());
+	private float dieSizeThr = Float.parseFloat(ConfigManager.getConfig().getDieSizeThr());
+	private Filter filter = new Filter();
 	
 	/**
 	 * 
@@ -31,7 +31,7 @@ public class ScanImage {
 			int pixelCounter = 0;
 			for (int w = 1; w < image.getWidth(); w++)
 			{
-				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
+				if(filter.makeRGB(image.getRGB(w, h)) == 0){
 					pixelCounter++;
 				}
 			}
@@ -67,7 +67,7 @@ public class ScanImage {
 			int pixelCounter = 0;
 			for (int w = 1; w < image.getWidth(); w++)
 			{
-				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
+				if(filter.makeRGB(image.getRGB(w, h)) == 0){
 					pixelCounter++;
 				}
 			}
@@ -101,7 +101,7 @@ public class ScanImage {
 			int pixelCounter = 0;
 			for (int h = 0; h < image.getHeight() ; h++)
 			{
-				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
+				if(filter.makeRGB(image.getRGB(w, h)) == 0){
 					pixelCounter++;
 				}
 			}
@@ -133,7 +133,7 @@ public class ScanImage {
 			int pixelCounter = 0;
 			for (int h = 0; h < image.getHeight() ; h++)
 			{
-				if(imageTool.makeRGB(image.getRGB(w, h)) == 0){
+				if(filter.makeRGB(image.getRGB(w, h)) == 0){
 					pixelCounter++;
 				}
 			}
@@ -150,6 +150,4 @@ public class ScanImage {
 		}
 		return rightLine;
 	}
-
-
 }

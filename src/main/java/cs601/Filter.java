@@ -45,4 +45,23 @@ public class Filter {
 		srv.savePNG(image, path + "_Crop.png");
 		return image;
 	}
+	
+	/**
+	 * makeRGB
+	 * Generate RGB from r, g, b index
+	 *
+	 *@param rgb
+	 *@return RGB
+	 */
+	public int makeRGB(int rgb) {
+		int result = 0;
+		Integer redIndex = Integer.parseInt(ConfigManager.getConfig().getRedIndex());
+		Integer greenIndex = Integer.parseInt(ConfigManager.getConfig().getGreenIndex());
+		float red = (rgb >> redIndex) & 0xFF;
+		float green = (rgb >> greenIndex) & 0xFF;
+		float blue = (rgb & 0xFF);
+		//convert the pixel to black and white
+		result = (int)(red*0.299 + green*0.587 + blue*0.114);
+		return result;
+	}
 }

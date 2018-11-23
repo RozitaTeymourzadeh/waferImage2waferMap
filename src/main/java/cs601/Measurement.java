@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
  */
 public class Measurement {
 	
-	ImageProcessingTools imageTool = new ImageProcessingTools();
+	Filter filter = new Filter();
 
 	public int[] calcSize(BufferedImage img, int left, int right, int top, int bottom){
 		
@@ -29,7 +29,7 @@ public class Measurement {
 		{
 			for (int h = top; h <= bottom; h++)
 			{
-				if(imageTool.makeRGB(img.getRGB(w, h)) == 0){
+				if(filter.makeRGB(img.getRGB(w, h)) == 0){
 					if(counterSpace != 0 && counterSpace < 100){
 						space[counterSpace] = space[counterSpace] + 1;
 					}
@@ -60,7 +60,7 @@ public class Measurement {
 		{
 			for (int w = left; w <= right; w++)
 			{
-				if(imageTool.makeRGB(img.getRGB(w, h)) == 0){
+				if(filter.makeRGB(img.getRGB(w, h)) == 0){
 					if(counterSpace != 0 && counterSpace < 100){
 						space[counterSpace] = space[counterSpace] + 1;
 					}

@@ -1,13 +1,24 @@
+/**
+ * 
+ */
 package cs601;
+
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
-import org.junit.Assert;
-import org.junit.jupiter.api.Test;
 
-class IntegrationTest {
+import javax.imageio.ImageIO;
+
+import org.junit.Assert;
+import org.junit.Test;
+/**
+ * Integration Test
+ * 
+ * @author rozitateymourzadeh
+ *
+ */
+public class IntegrationTest {
 	
 	@Test
 	public void testCropFilter() throws IOException {

@@ -14,14 +14,18 @@ import org.apache.logging.log4j.Logger;
  * Conversion Class 
  * To do image conversion 
  * 
- * @author rozitateymourzadeh
+ * @author Rozita Teymourzadeh
  *
  */
 public class Conversion {
 	private static Logger LOG = LogManager.getLogger(Conversion.class);
 	private BufferedImage image = null;
 	private int[] state = null;
-	ScanImage scnImg = new ScanImage();
+	private ScanImage scnImg = new ScanImage();
+	private ImageProcessingTools imageTool = new ImageProcessingTools();
+	private Filter filter = new Filter();
+	private Measurement msrt = new Measurement();
+	private LayoutGenerator layout = new LayoutGenerator();
 	
 	/**
 	 * Constructor
@@ -31,16 +35,10 @@ public class Conversion {
 	}
 	
 	public void convert(File imageFile) {
-		
-
+		LOG.info("Conversion Process is started!");
 		try {
-
 			String prefix = imageFile.getAbsolutePath();
 			String imageName = imageFile.getName(); 
-			ImageProcessingTools imageTool = new ImageProcessingTools();
-			Filter filter = new Filter();
-			Measurement msrt = new Measurement();
-			LayoutGenerator layout = new LayoutGenerator();
 			this.setState(new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())]);
 			if(imageName.indexOf(".") > 0) {
 				imageName = imageName.substring(0, imageName.lastIndexOf(".") );
@@ -73,7 +71,7 @@ public class Conversion {
 			height = endLine - startLine + 1;
 			image = filter.cropFilter(image, prefix, height, width, startLine, endLine, leftLine, rightLine);
 			layout.printLayout(image, prefix, imageName, height, width, dieSize);
-			LOG.info("Image was converted!");
+			LOG.info("Image is converted!");
 		} catch(IOException e) {
 			LOG.error("FATAL: Failed to read the image: " + imageFile.getAbsolutePath());
 			return;

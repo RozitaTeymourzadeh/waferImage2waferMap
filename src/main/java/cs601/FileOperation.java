@@ -3,6 +3,9 @@
  */
 package cs601;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * FileOperation Class
  * To Find layout boundary by calculating the index start and end point of wafermap
@@ -11,6 +14,7 @@ package cs601;
  *
  */
 public class FileOperation {
+	private static Logger LOG = LogManager.getLogger(FileOperation.class);
 	private int maxDiodePerLine = Integer.parseInt(ConfigManager.getConfig().getMaxDiodePerLine());
 	private int iStart = 0;
 	private int iEnd = maxDiodePerLine - 1;
@@ -31,7 +35,7 @@ public class FileOperation {
 	 * 
 	 */
 	public void indexCalculator () {
-
+		LOG.info("Index Calculator is Started!");
 		for(int i = iStart; i < maxDiodePerLine && iStart == 0; i++){
 			for(int j = jStart; j <= jEnd; j++){
 				if(waferMap[i][j]){

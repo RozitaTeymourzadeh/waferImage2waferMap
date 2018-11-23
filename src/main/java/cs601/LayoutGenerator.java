@@ -8,31 +8,35 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * @author rozitateymourzadeh
+ * Layout Generator Class
+ * A class to write wafer map to the file
+ * @author Rozita Teymourzadeh
  *
  */
 public class LayoutGenerator {
-	
+	private static Logger LOG = LogManager.getLogger(LayoutGenerator.class);
 	private int lineNum;
+	private boolean[][] waferMap = null ;
+	private WaferMap wafer = new WaferMap();
+	private Service srv = new Service();
+	private PatternDetector patternDetector = new PatternDetector();
 	
 	public LayoutGenerator() {
 		
 	}
 	
+	/*
+	 * Constructor
+	 * 
+	 **/
 	public LayoutGenerator(int lineNum) {
 		this.setLineNum(lineNum);
 	}
 	
-	private static Logger LOG = LogManager.getLogger(LayoutGenerator.class);
-	WaferMap wafer = new WaferMap();
-	Service srv = new Service();
-	PatternDetector patternDetector = new PatternDetector();
-
 	/**
 	 * printLayout
 	 * To write wafer map in in text file
@@ -45,7 +49,7 @@ public class LayoutGenerator {
 	 * @param dieSize
 	 */
 	public void printLayout(BufferedImage image, String path, String imageName, int height,int width, int[] dieSize) {
-		boolean[][] waferMap = null ;
+		LOG.info("Print Layout is started!");
 		try {
 			BufferedImage pattern = patternDetector.getPattern(dieSize);
 			srv.savePNG(pattern, path +"_Pattern.png");

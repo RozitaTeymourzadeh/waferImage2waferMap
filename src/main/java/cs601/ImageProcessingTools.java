@@ -5,6 +5,9 @@ package cs601;
 
 import java.awt.image.BufferedImage;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Image Processing Tools
  * A class tool to convert image to Black and white image
@@ -12,7 +15,6 @@ import java.awt.image.BufferedImage;
  *
  */
 public class ImageProcessingTools {
-	
 	private int[] statR = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
 	private int[] statG = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
 	private int[] statB = new int[Integer.parseInt(ConfigManager.getConfig().getGrayScale())];
@@ -23,8 +25,12 @@ public class ImageProcessingTools {
 	private Integer greenIndex = Integer.parseInt(ConfigManager.getConfig().getGreenIndex());
 	private Integer blackWhiteThr = Integer.parseInt(ConfigManager.getConfig().getBlackWhiteThr());
 	private int rgb;
-	Filter filter = new Filter();
+	private Filter filter = new Filter();
 	
+	/*
+	 * Constructor
+	 * 
+	 **/
 	public ImageProcessingTools(){
 		
 	}
@@ -38,7 +44,6 @@ public class ImageProcessingTools {
 	 * @return state
 	 */
 	public int[] createBlackWhite(BufferedImage image, int height, int width) {
-		
 		for (int h = 1; h < height; h += hStep)
 		{
 			for (int w = 1; w < width; w += wStep)
@@ -68,7 +73,6 @@ public class ImageProcessingTools {
 	 * @return image
 	 */
 	public BufferedImage normalizedBlackWhite(BufferedImage image, int height,int width) {
-
 		for (int h = 1; h < height; h+=hStep)
 		{
 			for (int w = 1; w<width; w+=wStep)

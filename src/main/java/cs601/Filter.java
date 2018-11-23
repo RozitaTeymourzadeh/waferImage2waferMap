@@ -4,7 +4,6 @@
 package cs601;
 
 import java.awt.image.BufferedImage;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,8 +16,18 @@ import org.apache.logging.log4j.Logger;
  */
 public class Filter {
 	
-	Service srv = new Service();
+	private Service srv = new Service();
 	private static Logger LOG = LogManager.getLogger(Filter.class);
+	private Integer redIndex = Integer.parseInt(ConfigManager.getConfig().getRedIndex());
+	private Integer greenIndex = Integer.parseInt(ConfigManager.getConfig().getGreenIndex());
+	
+	/*
+	 * Constructor
+	 * 
+	 **/
+	public Filter () {
+		
+	}
 	/**
 	 * Crop and Save filter
 	 * @param image
@@ -32,7 +41,7 @@ public class Filter {
 	 * @return image
 	 */
 	public BufferedImage cropFilter(BufferedImage image, String path, int height, int width, int startLine,int endLine, int leftLine, int rightLine) {
-		LOG.info("CropFilter process is started...");
+		LOG.info("CropFilter process is started!");
 		BufferedImage imgOriginal = image;
 		image = srv.map(width, height);
 		for (int w = leftLine; w <= rightLine; w++)
@@ -55,8 +64,6 @@ public class Filter {
 	 */
 	public int makeRGB(int rgb) {
 		int result = 0;
-		Integer redIndex = Integer.parseInt(ConfigManager.getConfig().getRedIndex());
-		Integer greenIndex = Integer.parseInt(ConfigManager.getConfig().getGreenIndex());
 		float red = (rgb >> redIndex) & 0xFF;
 		float green = (rgb >> greenIndex) & 0xFF;
 		float blue = (rgb & 0xFF);

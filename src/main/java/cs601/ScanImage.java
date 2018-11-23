@@ -4,15 +4,23 @@
 package cs601;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
- * @author rozitateymourzadeh
+ * @author Rozita Teymourzaedeh
  *
  */
 public class ScanImage {
 	private Integer dieDistanceTolerance = Integer.parseInt(ConfigManager.getConfig().getDieDistanceTolerance());
 	private float dieSizeThr = Float.parseFloat(ConfigManager.getConfig().getDieSizeThr());
 	private Filter filter = new Filter();
+	
+	/*
+	 * Constructor
+	 **/
+	public ScanImage() {
+		
+	}
 	
 	/**
 	 * 
@@ -22,7 +30,7 @@ public class ScanImage {
 	 * @param dieSize
 	 * @return startLine
 	 */
-	public int findTopDiode(BufferedImage image, int[] dieSize) {
+	public int findTopDiode(BufferedImage image, int[] dieSize) throws IOException {
 
 		int startLine = 0;
 		int lineCounter = 0;
@@ -58,7 +66,7 @@ public class ScanImage {
 	 * @param startLine
 	 * @return endLine
 	 */
-	public int findBottomDiode(BufferedImage image, int[] dieSize, int startLine) {
+	public int findBottomDiode(BufferedImage image, int[] dieSize, int startLine) throws IOException{
 
 		int endLine = image.getHeight() - 1;
 		int lineCounter = 0;
@@ -92,7 +100,7 @@ public class ScanImage {
 	 * @param dieSize
 	 * @return leftLine
 	 */
-	public int findLeftDiode(BufferedImage image, int[] dieSize) {
+	public int findLeftDiode(BufferedImage image, int[] dieSize) throws IOException{
 
 		int leftLine = 0;
 		int lineCounter = 0;
@@ -120,12 +128,13 @@ public class ScanImage {
 	}
 
 	/**
+	 * find Right line of Image
 	 * @param image
 	 * @param dieSize
 	 * @param leftLine
 	 * @return rightLine
 	 */
-	public int findRightDiode(BufferedImage image, int[] dieSize, int leftLine) {
+	public int findRightDiode(BufferedImage image, int[] dieSize, int leftLine) throws IOException{
 		int rightLine = image.getWidth() - 1;
 		int lineCounter = 0;
 		for (int w = rightLine; w > leftLine; w--)

@@ -4,18 +4,43 @@
 package cs601;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * @author rozitateymourzadeh
+ * PatternDetector
+ * To detect the healthy Die in the image 
+ * 
+ * @author Rozita Teymourzadeh
  *
  */
 public class PatternDetector {
+	private float thrLeft = Float.parseFloat(ConfigManager.getConfig().getThrLeft());
+	private float thrRight = Float.parseFloat(ConfigManager.getConfig().getThrRight());
+	private Service srv = new Service();
 	
-	float thrLeft = Float.parseFloat(ConfigManager.getConfig().getThrLeft());
-	float thrRight = Float.parseFloat(ConfigManager.getConfig().getThrRight());
+	/**
+	 * Constructor
+	 */
+	public PatternDetector() {
+		
+	}
 	
-	public boolean[] findLeft(BufferedImage img, BufferedImage pattern, int x, int y){
-		boolean[] res = new boolean[100];
+	/**
+	 * findLeft method
+	 * To find pattern in the left part of the image starting from y,x coordinate 
+	 * 
+	 * @param x
+	 * @param y
+	 * @param pattern
+	 * @param image
+	 * @throws IOException
+	 * 
+	 * @return boolean[] result
+	 */
+	public boolean[] findLeft(BufferedImage img, BufferedImage pattern, int x, int y) throws IOException{
+		boolean[] result = new boolean[100];
 		int index = 100 - 1;
 		for( ; index >= 0 && x >= 1; x -= pattern.getWidth(), index--){
 			float[][] sim = new float[3][3];
@@ -39,24 +64,33 @@ public class PatternDetector {
 			}
 
 			if(sim[xTemp][yTemp] > thrLeft){
-				res[index] = true;
+				result[index] = true;
 				y += yTemp - 1;
 				x += xTemp - 1;
 			} else {
-				res[index] = false;
+				result[index] = false;
 			}
 		}
 
 		for(; index >= 0; index--){
-			res[index] = false;
+			result[index] = false;
 		}
 
-		return res;
+		return result;
 	}
 
-
-	public boolean[] findRight(BufferedImage img, BufferedImage pattern, int x, int y){
-		boolean[] res = new boolean[100];
+	/**
+	 * findRight method
+	 * To find pattern in the Right part of the image starting from y,x coordinate 
+	 * 
+	 * @param x
+	 * @param y
+	 * @param pattern
+	 * @param image
+	 * @throws IOException
+	 */
+	public boolean[] findRight(BufferedImage img, BufferedImage pattern, int x, int y) throws IOException{
+		boolean[] result = new boolean[100];
 		int index = 0;
 		for( ; index < 100 && x < img.getWidth() - pattern.getWidth() - 1; x += pattern.getWidth(), index++){
 			float[][] sim = new float[3][3];
@@ -80,24 +114,35 @@ public class PatternDetector {
 			}
 
 			if(sim[xTemp][yTemp] > thrRight){
-				res[index] = true;
+				result[index] = true;
 				y += yTemp - 1;
 				x += xTemp - 1;
 			} else {
-				res[index] = false;
+				result[index] = false;
 			}
 		}
 
 		for(; index < 100; index++){
-			res[index] = false;
+			result[index] = false;
 		}
 
-		return res;
+		return result;
 	}
 
+	/**
+	 * getSimilarity method
+	 * To find similar die with pattern in the image
+	 * 
+	 * @param x
+	 * @param y
+	 * @param pattern
+	 * @param image
+	 * @throws IOException
+	 * 
+	 * @return boolean result
+	 */
 	static int cacheCounter = 0;
 	public float getSimilarity(BufferedImage img, int x, int y, BufferedImage pattern){
-		Service srv = new Service();
 		float diff = 0;
 
 		int width = pattern.getWidth();
@@ -122,19 +167,26 @@ public class PatternDetector {
 		return res*res*res*res;
 	}
 
-	public BufferedImage getPattern(int[] size){
-		Service srv = new Service();
-		BufferedImage res = srv.map(size[0], size[1]);
+	/**
+	 * getPattern method
+	 * To find pattern in the image
+	 * 
+	 * @param size
+	 * @throws IOException
+	 * 
+	 * @return BufferedImage result
+	 */
+	public BufferedImage getPattern(int[] size) throws IOException{
+		BufferedImage result = srv.map(size[0], size[1]);
 		for(int i = 0; i < size[0]; i++){
 			for(int j = 0; j < size[1]; j++){
 				if(i == 0 || i == size[0] - 1 || j == 0 || j == size[1] - 1){
-					res.setRGB(i, j, 0xFFFFFF);
+					result.setRGB(i, j, 0xFFFFFF);
 				} else {
-					res.setRGB(i, j, 0);
+					result.setRGB(i, j, 0);
 				}
 			}
 		}
-		return res;
+		return result;
 	}
-
 }

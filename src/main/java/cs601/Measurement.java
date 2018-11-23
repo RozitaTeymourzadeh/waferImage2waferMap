@@ -4,17 +4,42 @@
 package cs601;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * @author rozitateymourzadeh
+ * Measurement Class
+ * A class to conduct measurement on the selected die
+ * 
+ * @author Rozita Teymourzadeh
  *
  */
 public class Measurement {
+	private static Logger LOG = LogManager.getLogger(Measurement.class);
+	private Filter filter = new Filter();
 	
-	Filter filter = new Filter();
-
-	public int[] calcSize(BufferedImage img, int left, int right, int top, int bottom){
+	/*
+	 * Constructor
+	 * 
+	 **/
+	public Measurement() {
 		
+	}
+	
+	/**
+	 * calcSize
+	 * To calculate die size
+	 * 
+	 * @param left
+	 * @param right
+	 * @param top
+	 * @param Bottom
+	 * @throws IOException
+	 */
+	public int[] calcSize(BufferedImage img, int left, int right, int top, int bottom) throws IOException{
+		LOG.info("Die Size calculation is started!");
 		int dieHeight = 0;
 		int spaceHeight = 0;
 		int dieWidth = 0;

@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import cs601.Filter.Filter;
 import cs601.Service.ConfigManager;
+import cs601.Tool.Measurement;
 /**
  * Integration Test
  * 
@@ -46,4 +47,15 @@ public class IntegrationTest {
 		String outputFile = ConfigManager.getConfig().getOutput();
 		Assert.assertEquals("waferTXT", outputFile);
 	}
+	
+	@Test
+	public void testDieSizing() throws IOException {
+		Measurement mse = new Measurement();
+		File folder = new File("cache");
+		File[] imgs = folder.listFiles();
+		BufferedImage image = ImageIO.read(imgs[1]);
+		int[] result = mse.calcSize(image, 0, 19, 0, 19);
+		Assert.assertEquals(0, result[0]);
+	}
+	
 }

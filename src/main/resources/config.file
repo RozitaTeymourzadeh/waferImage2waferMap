@@ -1,0 +1,16 @@
+input=waferIMG
+output=waferTXT
+grayScale=256
+redIndex=16
+greenIndex=8
+blackWhiteThr=40
+dieSizeThr=1.5f
+dieDistanceTolerance=5
+hStep=1
+wStep=1
+thrUp=0.3f
+thrDown=0.3f
+thrRight=0.3f
+thrLeft=0.3f
+maxDiodePerLine=300
+aveComponent=100

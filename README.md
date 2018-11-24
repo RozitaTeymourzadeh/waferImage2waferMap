@@ -55,6 +55,8 @@ Noise removal filter tries to detect background noise from the image and remove 
 
 ### Expected Result
 The output file contains converted SINF format file to be read from CNC machine in the factory line. 
-
+#### Input Image File:
 ![70](image/70.jpg)
+
+#### Output SINF File: 
 ![70](image/70.txt)

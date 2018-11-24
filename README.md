@@ -9,7 +9,7 @@ A wafer, also called a slice or substrate, is a thin slice of semiconductor mate
 - This project is used in Eclipse IDE with JAVA programming language.
 - Use SINF format for conversion method.
 - Use image processing technique to read the image.
-- Atleaset 2 System Tests, 2 Integration Tests and 5 Unit Tests are required.
+- At leaset 2 System Tests, 2 Integration Tests, and 5 Unit Tests are required.
 
 ## Design
 
@@ -32,15 +32,15 @@ XDIES:2.945   step along X
 YDIES:2.945   step along Y
 ```
 ## Image Definition
-Wafer image is RGB color space. RGB color space or RGB color system, constructs all the colors from the combination of the Red, Green and Blue colors.
-The red, green and blue use 8 bits each, which have integer values from 0 to 255. This makes 256*256*256=16777216 possible colors. See [Image Defination](https://www.rapidtables.com/web/color/RGB_Color.html). 
+Wafer image is RGB color space. RGB color space or RGB color system, construct all the colors from the combination of the Red, Green and Blue colors.
+The red, green and blue use 8 bits each, which have integer values from 0 to 255. This makes 256*256*256=16777216 possible colors. See [Image Definition](https://www.rapidtables.com/web/color/RGB_Color.html). 
 
 
 ### Image Contrast 
-Contrast is the difference in luminance or color that makes an object (or its representation in an image or display) distinguishable. In visual perception of the real world, contrast is determined by the difference in the color and brightness of the object and other objects within the same field of view. (Wikipedia). Brightness and contrast factors are significant factors that could result in failing or passing the ASIC processor component from the image. These factors is set in the configuration file and with the same test environment no tuning is required. It is recommended to switch off the flash light while taking photo from the wafer.  
+Contrast is the difference in luminance or color that makes an object (or its representation in an image or display) distinguishable. In visual perception of the real world, contrast is determined by the difference in the color and brightness of the object and other objects within the same field of view. (Wikipedia). Brightness and contrast factors are significant factors that could result in failing or passing the ASIC processor component from the image. These factors are set in the configuration file and with the same test environment, no tuning is required. It is recommended to switch off the flashlight while taking a photo from the wafer.
 
 ### Edge Detection Filter 
-Edge detection filter defines a complete die mask and considers it as healthy die. Then it tries to find a matching chip die size by applying edge detection technique. Fatal die processor can be detected by detecting faulty edge less than a certain threshold and the algorithm will ignore the NOK die in the mass production in the factory line. For this purpose, image processing tool is designed and implemented.
+Edge detection filter defines a complete die mask and considers it as a healthy die. Then it tries to find a matching chip die size by applying edge detection technique. Fatal die processor can be detected by detecting faulty edge less than a certain threshold and the algorithm will ignore the NOK die in the mass production in the factory line. For this purpose, image processing tool is designed and implemented.
 
 - RGB Maker
 - Pattern Detector
@@ -48,7 +48,7 @@ Edge detection filter defines a complete die mask and considers it as healthy di
 - Die Measurement
 
 ### Noise Removal Filter 
-Noise removal filter tries to detect background noise from the image and remove it from the whole process. Convert the image to black and white scale image and normalize the image are the part of noise removal filter.The list of image processing units used in this project, are listed here:
+Noise removal filter tries to detect background noise from the image and remove it from the whole process. Convert the image to black and white scale image and normalize the image are the part of noise removal filter. The list of image processing units used in this project are listed here:
 
 - Black and White scaled image 
 - Normalized Image 

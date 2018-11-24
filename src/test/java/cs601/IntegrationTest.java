@@ -7,13 +7,11 @@ package cs601;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import org.junit.Assert;
 import org.junit.Test;
-
 import cs601.Filter.Filter;
+import cs601.Service.ConfigManager;
 /**
  * Integration Test
  * 
@@ -33,4 +31,19 @@ public class IntegrationTest {
 		Assert.assertNotNull(cropped);
 	}
 
+	
+	@Test
+	public void testImage() throws IOException {
+		File folder = new File(ConfigManager.getConfig().getInput());
+		File[] imgs = folder.listFiles();
+		File imageFile = imgs[1];
+		BufferedImage image = ImageIO.read(imageFile);
+		Assert.assertNotNull(image);
+	}
+	
+	@Test
+	public void testOutput() throws IOException {
+		String outputFile = ConfigManager.getConfig().getOutput();
+		Assert.assertEquals("waferTXT", outputFile);
+	}
 }

@@ -29,10 +29,16 @@ public class Run {
 		Service srv = new Service();
 		srv.createCache(cacheFolder);
 		File[] imgs = folder.listFiles();
-		for(int i = 0; i < imgs.length; i++){
-			if(imgs[i].getName().toLowerCase().endsWith(".jpg") || imgs[i].getName().toLowerCase().endsWith(".bmp")|| imgs[i].getName().toLowerCase().endsWith(".png")){
-				conv.convert(imgs[i]);
+		if (imgs != null) {
+			for(int i = 0; i < imgs.length; i++){
+				if(imgs[i].getName().toLowerCase().endsWith(".jpg") || imgs[i].getName().toLowerCase().endsWith(".bmp")|| imgs[i].getName().toLowerCase().endsWith(".png")){
+					conv.convert(imgs[i]);
+				}else {
+					LOG.error("There is no image for conversion!");
+				}
 			}
+		}else {
+			LOG.error("There is no input file!");
 		}
 		srv.delete(folder);
 		LOG.info("Conversion Process was completed!!");

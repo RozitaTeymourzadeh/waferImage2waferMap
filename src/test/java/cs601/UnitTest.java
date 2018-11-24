@@ -75,14 +75,7 @@ public class UnitTest {
 		Assert.assertEquals(40, Integer.parseInt(blackWhiteThr));
 	}
 	
-	@Test
-	public void testImage() throws IOException {
-		File folder = new File(ConfigManager.getConfig().getInput());
-		File[] imgs = folder.listFiles();
-		File imageFile = imgs[1];
-		BufferedImage image = ImageIO.read(imageFile);
-		Assert.assertNotNull(image);
-	}
+
 	
 	@Test
 	public void testDieSizeThr() throws IOException {
@@ -106,6 +99,15 @@ public class UnitTest {
 	public void testWStep() throws IOException {
 		String wStep = ConfigManager.getConfig().getWStep();
 		Assert.assertEquals(1, Integer.parseInt(wStep));
+	}
+	
+	@Test
+	public void testImage() throws IOException {
+		File folder = new File(ConfigManager.getConfig().getInput());
+		File[] imgs = folder.listFiles();
+		File imageFile = imgs[1];
+		BufferedImage image = ImageIO.read(imageFile);
+		Assert.assertNotNull(image);
 	}
 	
 	@Test

@@ -39,15 +39,22 @@ The red, green and blue use 8 bits each, which have integer values from 0 to 255
 Contrast is the difference in luminance or color that makes an object (or its representation in an image or display) distinguishable. In visual perception of the real world, contrast is determined by the difference in the color and brightness of the object and other objects within the same field of view. (Wikipedia). Brightness and contrast factors are significant factors that could result in failing or passing the ASIC processor component from the image. these factors will be set in the configuration file. 
 
 ### Edge Detection Filter 
-Edge detection filter defines a complete die mask and considers it as health die. Then it tries to find a matching chip die size by applying edge detection technique. Fatal die processor can be detected by detecting faulty edge less than a certain threshold and the algorithm will ignore the NOK die in the mass production in the factory line.  
+Edge detection filter defines a complete die mask and considers it as healthy die. Then it tries to find a matching chip die size by applying edge detection technique. Fatal die processor can be detected by detecting faulty edge less than a certain threshold and the algorithm will ignore the NOK die in the mass production in the factory line. For this purpose, image processing tool is designed and implemented.
+
+- RGB Maker
+- Pattern Detector
+- Similarity Pattern
+- Die Measurement
 
 ### Noise Removal Filter 
-Noise removal filter tries to detect background noise from the image and remove it from the whole process.
+Noise removal filter tries to detect background noise from the image and remove it from the whole process. Convert the image to black and white scale image and normalize the image are the part of noise removal filter.The list of image processing units used in this project, are listed here:
 
-### Crop Filter 
-Crop filter detects the wafer boundary and crops the image to reduce the unnecessary data processing throughout the whole image processing. 
+- Black and White scaled image 
+- Normalized Image 
+- Crop Filter 
 
 ### Expected Result
 The output file contains converted SINF format file to be read from CNC machine in the factory line. 
 
-
+![70](image/70.jpg)
+![70](image/70.txt)

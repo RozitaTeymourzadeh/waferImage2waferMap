@@ -36,7 +36,7 @@ The red, green and blue use 8 bits each, which have integer values from 0 to 255
 
 
 ### Image Contrast 
-Contrast is the difference in luminance or color that makes an object (or its representation in an image or display) distinguishable. In visual perception of the real world, contrast is determined by the difference in the color and brightness of the object and other objects within the same field of view. (Wikipedia). Brightness and contrast factors are significant factors that could result in failing or passing the ASIC processor component from the image. these factors will be set in the configuration file. 
+Contrast is the difference in luminance or color that makes an object (or its representation in an image or display) distinguishable. In visual perception of the real world, contrast is determined by the difference in the color and brightness of the object and other objects within the same field of view. (Wikipedia). Brightness and contrast factors are significant factors that could result in failing or passing the ASIC processor component from the image. These factors is set in the configuration file and with the same test environment no tuning is required. It is recommended to switch off the flash light while taking photo from the wafer.  
 
 ### Edge Detection Filter 
 Edge detection filter defines a complete die mask and considers it as healthy die. Then it tries to find a matching chip die size by applying edge detection technique. Fatal die processor can be detected by detecting faulty edge less than a certain threshold and the algorithm will ignore the NOK die in the mass production in the factory line. For this purpose, image processing tool is designed and implemented.

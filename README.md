@@ -9,6 +9,7 @@ A wafer, also called a slice or substrate, is a thin slice of semiconductor mate
 - This project is used in Eclipse IDE with JAVA programming language.
 - Use SINF format for conversion method.
 - Use image processing technique to read the image.
+- Atleaset 2 System Tests, 2 Integration Tests and 5 Unit Tests are required.
 
 ## Design
 
@@ -53,10 +54,28 @@ Noise removal filter tries to detect background noise from the image and remove 
 - Normalized Image 
 - Crop Filter 
 
-### Expected Result
+## Test 
+This project requires test cases execute through JUnit.
+
+```java
+package cs601;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({ IntegrationTest.class, SystemTest.class, UnitTest.class })
+
+public class AllTests {
+
+}
+```
+
+## Expected Result
 The output file contains converted SINF format file to be read from CNC machine in the factory line. 
-#### Input Image File:
+### Input Image File:
 ![70](image/70.jpg)
 
-#### Output SINF File: 
+### Output SINF File: 
 ![70](image/70.txt)

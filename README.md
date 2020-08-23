@@ -1,4 +1,4 @@
-Side Project - Wafer Image to Wafer Map Converter 
+# Wafer Image to Wafer Map Converter 
 =======================================
 ## waferImage2waferMap
 waferImage2wafermap repository converts the image of wafer semiconductor into the wafer map to be used in a factory line.
